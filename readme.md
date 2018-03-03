@@ -1,5 +1,7 @@
 # Chimera Doorlock
 
+> A Tessel powered RFID doorlock for the space, interfacing with Cobot
+
 Powered by a [Tessel][tessel]
 
 ## Development

@@ -1,5 +1,9 @@
+const config = require('config')
+const logger = require('../utils/logger')
 const tessel = require('tessel')
-const constants = require('../../config/constants')
+
+const DOOR_OPEN_DELAY = config.get('openDelay')
+
 // const fs = require('fs')
 // const path = require('path')
 
@@ -8,21 +12,23 @@ const constants = require('../../config/constants')
 
 class Door {
   static open() {
+    logger.log('OPEN DOOR')
+
     // TODO: trigger door opening...
-    tessel.led[2].on()
+    tessel.led[3].on()
 
     return new Promise(resolve => {
       setTimeout(() => {
         // TODO: trigger door closing
         Door.close()
         resolve()
-      }, constants.DOOR_OPEN_DELAY)
+      }, DOOR_OPEN_DELAY)
     })
   }
 
   static close() {
-    console.log('CLOSE DOOR')
-    tessel.led[2].off()
+    logger.log('CLOSE DOOR')
+    tessel.led[3].off()
   }
 }
 
