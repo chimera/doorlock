@@ -1,0 +1,26 @@
+{
+  "name": "doorlock",
+  "version": "0.1.0",
+  "main": "src/boot.js",
+  "scripts": {
+    "start": "t2 run src/boot.js",
+    "test": "jest",
+    "watch-test": "jest --watch"
+  },
+  "dependencies": {
+    "axios": "0.17.1",
+    "chalk": "2.3.1",
+    "consolidate": "0.15.0",
+    "eslint": "4.17.0",
+    "express": "4.16.2",
+    "node-hid": "0.7.2",
+    "pug": "2.0.0-rc.4",
+    "serialport": "6.0.5",
+    "tessel": "0.3.25"
+  },
+  "devDependencies": {
+    "babel-eslint": "8.2.2",
+    "eslint-plugin-react": "7.7.0",
+    "jest": "22.4.2"
+  }
+}
