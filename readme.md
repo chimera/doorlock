@@ -6,19 +6,21 @@ Powered by a [Tessel][tessel]
 
 Follow the [start guide][start] on [Tessel.io][tessel].
 
-Install `t2-cli` globally:
-
-```bash
-npm install -g t2-cli
-```
-
-Now install the correct version of node using nvm:
+Install the correct version of node using nvm:
 
 ```bash
 nvm install
 nvm use
 npm install
 ```
+
+Now install `t2-cli` globally:
+
+```bash
+npm install -g t2-cli
+```
+
+Plug your Tessel in.
 
 Now you can deploy to your connected Tessel device:
 
@@ -66,5 +68,6 @@ t2 ap -n doorlock
 
 *   Make sure to format USB to be FAT32!
 
+[jest]: https://facebook.github.io/jest
 [start]: http://tessel.github.io/t2-start
 [tessel]: http://tessel.io
