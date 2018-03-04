@@ -83,7 +83,7 @@ npm start
 
 ...which will run the application locally as well as run the test suite, watching for changes.
 
-### Testing
+## Testing
 
 We use [Jest][jest] to do testing of the core code in the library. Make sure to write tests for new code or update tests on existing code as needed. Test files are next to their source file named with a `.test.js` extension.
 
@@ -99,11 +99,7 @@ Run tests watching for changes:
 npm run watch-test
 ```
 
-### RFID Cards
-
-Read cards from Cobot:
-
-<https://www.cobot.me/api-docs/check-ins#list-check-in-tokens>
+## Useful Details
 
 ### Useful Commands
 
@@ -135,7 +131,24 @@ To find the IP address of your Tessel, download the iOS app Fing and look for a 
 
 *   Make sure to format micro SD to be FAT32!
 
+## Contributing
+
+Contributions welcome!
+
+Want to contribute? Submit a Pull Request with your changes!
+
+Using this in your own project? Let us know by creating an issue in Github!
+
+## Credits
+
+Developed by [Dana Woodman][dana] &copy; 2018.
+
+## License
+
+MIT
+
 [cobot]: https://www.cobot.me/
+[dana]: http://danawoodman.com
 [jest]: https://facebook.github.io/jest
 [latch]: https://www.amazon.com/gp/product/B00V45GWTI
 [start]: http://tessel.github.io/t2-start
