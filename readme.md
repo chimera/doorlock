@@ -17,13 +17,25 @@ The RFID doorlock consists of a few components that allow us to have a offline c
 
 Currently, we are using Cobot to manage our membership as well as RFID card numbers (checkin tokens in Cobot parlance).
 
-The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript). The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format). A USB powered RFID card reader (125khz) is plugged into the other Tessel USB port. This reader behaves like a keyboard; when a card is scanned it sends a string of card numbers as keys with a newline character.
+### Tessel Microcontroller
+
+The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript). The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format).
+
+### USB RFID Reader
+
+A USB powered RFID card reader (125khz) is plugged into the other Tessel USB port. This reader behaves like a keyboard; when a card is scanned it sends a string of card numbers as keys with a newline character.
 
 The application listens for card scan events and when one if found, it looks the card number up in a local database (the above mentioned `json` file). If it finds a card, it opens the door, if not it shows an error message.
 
+### Door Latch
+
 To open the door, we use a relay (or optionally a TIP120 transistor) which powers a 12v door latch. If no power is sent to the door latch, it remains locked. When it gets a 12v current it opens and allows the member entry.
 
+### OLED Display
+
 Whether a success or failure, we should details on an attached OLED display as well as when the card list updates or other unexpected issues.
+
+### API Member RFID Card Sync
 
 When the device first turns on it connects to WiFi and then fetches all the member RFID cards from the Cobot checkin token API and then updates the `json` card file. It completely overwrites the existing list of cards. If there is a failure getting the cards, we keep the original card list as a fallback.
 
