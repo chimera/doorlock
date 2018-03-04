@@ -4,11 +4,29 @@
 
 Powered by a [Tessel][tessel]
 
+## Technical Overview
+
+The RFID doorlock consists of a few components that allow us to have a offline capable, yet up-to-date list of member's RFID cards.
+
+Currently, we are using Cobot to manage our membership as well as RFID card numbers (checkin tokens in Cobot parlance).
+
+The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript). The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format). A USB powered RFID card reader (125mhz) is plugged into the other Tessel USB port. This reader behaves like a keyboard; when a card is scanned it sends a string of card numbers as keys with a newline character.
+
+The application listens for card scan events and when one if found, it looks the card number up in a local database (the above mentioned `json` file). If it finds a card, it opens the door, if not it shows an error message.
+
+To open the door, we use a relay (or optionally a TIP120 transistor) which powers a 12v door latch. If no power is sent to the door latch, it remains locked. When it gets a 12v current it opens and allows the member entry.
+
+Whether a success or failure, we should details on an attached OLED display as well as when the card list updates or other unexpected issues.
+
+When the device first turns on it connects to WiFi and then fetches all the member RFID cards from the Cobot checkin token API and then updates the `json` card file. It completely overwrites the existing list of cards. If there is a failure getting the cards, we keep the original card list as a fallback.
+
+Eventually, we can remove Cobot and swap it with our own service if we desire.
+
 ## Development
 
-Follow the [start guide][start] on [Tessel.io][tessel].
+First, follow the [start guide][start] on [Tessel.io][tessel].
 
-Install the correct version of node using nvm:
+Next, install the correct version of node using nvm:
 
 ```bash
 nvm install
@@ -27,8 +45,10 @@ Plug your Tessel in.
 Now you can deploy to your connected Tessel device:
 
 ```bash
-npm start
+npm run deploy
 ```
+
+For local development, you can run `npm start` which will run the application locally as well as run the test suite, watching for changes.
 
 ### Testing
 
@@ -47,9 +67,6 @@ Read cards from Cobot:
 ### Useful Commands
 
 ```bash
-# Connect to WiFi
-t2 wifi -n network-name -p "some password"
-
 # List devices
 t2 list
 
@@ -62,6 +79,9 @@ t2 push index.js
 # Clear code
 t2 erase
 
+# Connect to WiFi
+t2 wifi -n network-name -p "some password"
+
 # Create access point and server
 t2 ap -n doorlock
 ```
@@ -72,7 +92,7 @@ To find the IP address of your Tessel, download the iOS app Fing and look for a 
 
 ### USB Storage
 
-*   Make sure to format USB to be FAT32!
+*   Make sure to format micro SD to be FAT32!
 
 [jest]: https://facebook.github.io/jest
 [start]: http://tessel.github.io/t2-start

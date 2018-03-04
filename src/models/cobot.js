@@ -40,13 +40,6 @@ class Cobot {
       throw new Error('missing "COBOT_CLIENT_ID" env variable!')
     if (!COBOT_CLIENT_SECRET)
       throw new Error('missing "COBOT_CLIENT_SECRET" env variable!')
-    console.log(
-      COBOT_SCOPE,
-      COBOT_USER_EMAIL,
-      COBOT_USER_PASSWORD,
-      COBOT_CLIENT_ID,
-      COBOT_CLIENT_SECRET
-    )
     const qs = [
       `scope=${COBOT_SCOPE}`,
       `grant_type=password`,

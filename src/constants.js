@@ -9,6 +9,7 @@ module.exports = {
   COBOT_SCOPE: process.env.COBOT_SCOPE,
   COBOT_USER_EMAIL: process.env.COBOT_USER_EMAIL,
   COBOT_USER_PASSWORD: process.env.COBOT_USER_PASSWORD,
-  DOOR_OPEN_DELAY: process.env.DOOR_OPEN_DELAY,
+  DOOR_OPEN_DELAY: ENV === 'test' ? 1 : 6000,
   ENV,
+  RFID_PRODUCT_NAME: process.env.RFID_PRODUCT_NAME,
 }
