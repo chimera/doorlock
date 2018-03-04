@@ -2,8 +2,6 @@
 
 > A Tessel powered RFID doorlock for the space, interfacing with Cobot
 
-Powered by a [Tessel][tessel]
-
 ## Technical Overview
 
 The RFID doorlock consists of a few components that allow us to have a offline capable, yet up-to-date list of member's RFID cards:
@@ -15,13 +13,13 @@ The RFID doorlock consists of a few components that allow us to have a offline c
 *   12v industrial door latch (default locked)
 *   Software to fetch cards, display messages and do validation and open the door
 
-Currently, we are using Cobot to manage our membership as well as RFID card numbers (checkin tokens in Cobot parlance).
+Currently, we are using [Cobot][cobot] to manage our membership as well as RFID card numbers (checkin tokens in Cobot parlance).
 
 Eventually, we can remove Cobot and swap it with our own service if we desire.
 
 #### Tessel Microcontroller
 
-The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript).
+The doorlock consists of a [Tessel][tessel] microcontroller powered by node.js (JavaScript).
 
 #### USB SD Card List
 
@@ -123,6 +121,7 @@ To find the IP address of your Tessel, download the iOS app Fing and look for a 
 
 *   Make sure to format micro SD to be FAT32!
 
+[cobot]: https://www.cobot.me/
 [jest]: https://facebook.github.io/jest
 [start]: http://tessel.github.io/t2-start
 [tessel]: http://tessel.io
