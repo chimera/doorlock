@@ -41,7 +41,6 @@ describe('models/rfid-reader', () => {
   describe('.read', () => {
     test('it should listen for keyboard input', () => {
       const device = RFIDReader.read()
-      console.log(device)
       expect(device.read).toBeCalled()
     })
   })
