@@ -33,7 +33,7 @@ The application listens for card scan events and when one if found, it looks the
 
 #### Door Latch
 
-To open the door, we use a relay (or optionally a TIP120 transistor) which powers a 12v door latch. If no power is sent to the door latch, it remains locked. When it gets a 12v current it opens and allows the member entry.
+To open the door, we use a relay (or optionally a TIP120 transistor) which powers a [12v door latch][latch]. If no power is sent to the door latch, it remains locked. When it gets a 12v current it opens and allows the member entry.
 
 #### OLED Display
 
@@ -81,9 +81,17 @@ For local development, you can run `npm start` which will run the application lo
 
 We use [Jest][jest] to do testing of the core code in the library. Make sure to write tests for new code or update tests on existing code as needed. Test files are next to their source file named with a `.test.js` extension.
 
-Run tests once: `npm test`
+Run tests once:
 
-Run tests watching for changes: `npm run watch-test`
+```bash
+npm test
+```
+
+Run tests watching for changes:
+
+```bash
+npm run watch-test
+```
 
 ### RFID Cards
 
@@ -123,5 +131,6 @@ To find the IP address of your Tessel, download the iOS app Fing and look for a 
 
 [cobot]: https://www.cobot.me/
 [jest]: https://facebook.github.io/jest
+[latch]: https://www.amazon.com/gp/product/B00V45GWTI
 [start]: http://tessel.github.io/t2-start
 [tessel]: http://tessel.io
