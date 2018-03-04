@@ -33,13 +33,19 @@ To open the door, we use a relay (or optionally a TIP120 transistor) which power
 
 #### OLED Display
 
-Whether a success or failure, we should details on an attached OLED display as well as when the card list updates or other unexpected issues.
+Whether a success or failure, we show details on an attached OLED display as well as when the card list updates or other unexpected issues.
 
 #### API Member RFID Card Sync
 
 When the device first turns on it connects to WiFi and then fetches all the member RFID cards from the Cobot checkin token API and then updates the `json` card file. It completely overwrites the existing list of cards. If there is a failure getting the cards, we keep the original card list as a fallback.
 
+We periodically sync this list every few minutes (configurable).
+
 Eventually, we can remove Cobot and swap it with our own service if we desire.
+
+#### Access Log
+
+We log every door open event so we can keep and eye on usage. We log an entry containing the member name, datetime and RFID card number in a `json` file. This list is sent to Cobot periodically so we can create a "checkin" for a member. Once the list is pushed successfully we clear out the file.
 
 ## Development
 
