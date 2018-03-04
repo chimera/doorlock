@@ -6,11 +6,18 @@ Powered by a [Tessel][tessel]
 
 ## Technical Overview
 
-The RFID doorlock consists of a few components that allow us to have a offline capable, yet up-to-date list of member's RFID cards.
+The RFID doorlock consists of a few components that allow us to have a offline capable, yet up-to-date list of member's RFID cards:
+
+*   Tessel microcontroller powered by node.js
+*   USB RFID reader (125khz)
+*   SD card for storing RFID numbers
+*   OLED display
+*   12v industrial door latch (default locked)
+*   Software to fetch cards, display messages and do validation and open the door
 
 Currently, we are using Cobot to manage our membership as well as RFID card numbers (checkin tokens in Cobot parlance).
 
-The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript). The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format). A USB powered RFID card reader (125mhz) is plugged into the other Tessel USB port. This reader behaves like a keyboard; when a card is scanned it sends a string of card numbers as keys with a newline character.
+The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript). The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format). A USB powered RFID card reader (125khz) is plugged into the other Tessel USB port. This reader behaves like a keyboard; when a card is scanned it sends a string of card numbers as keys with a newline character.
 
 The application listens for card scan events and when one if found, it looks the card number up in a local database (the above mentioned `json` file). If it finds a card, it opens the door, if not it shows an error message.
 
