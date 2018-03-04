@@ -35,7 +35,7 @@ To open the door, we use a relay (or optionally a TIP120 transistor) which power
 
 Whether a success or failure, we show details on an attached OLED display as well as when the card list updates or other unexpected issues.
 
-#### API Member RFID Card Sync
+#### RFID Card Sync
 
 When the device first turns on it connects to WiFi and then fetches all the member RFID cards from the Cobot checkin token API and then updates the `json` card file. It completely overwrites the existing list of cards. If there is a failure getting the cards, we keep the original card list as a fallback.
 
