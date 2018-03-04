@@ -75,7 +75,13 @@ Now you can deploy to your connected Tessel device:
 npm run deploy
 ```
 
-For local development, you can run `npm start` which will run the application locally as well as run the test suite, watching for changes.
+For local development, you can run:
+
+```bash
+npm start
+```
+
+...which will run the application locally as well as run the test suite, watching for changes.
 
 ### Testing
 
