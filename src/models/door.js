@@ -1,8 +1,6 @@
-const config = require('config')
+const { DOOR_OPEN_DELAY } = require('../constants')
 const logger = require('../utils/logger')
 const tessel = require('tessel')
-
-const DOOR_OPEN_DELAY = config.get('openDelay')
 
 // const fs = require('fs')
 // const path = require('path')

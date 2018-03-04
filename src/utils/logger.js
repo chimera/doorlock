@@ -1,5 +1,4 @@
-const config = require('config')
-const ENV = config.get('env')
+const { ENV } = require('../constants')
 
 class Logger {
   log() {

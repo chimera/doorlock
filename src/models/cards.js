@@ -1,9 +1,9 @@
 const axios = require('axios')
-const config = require('config')
+const { COBOT_CARDS_API } = require('../constants')
 
 class Cards {
   static update() {
-    return axios.get(config.get('cardApi'))
+    return axios.get(COBOT_CARDS_API)
   }
 }
 

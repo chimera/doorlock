@@ -1,6 +1,19 @@
-const Door = require('./models/door')
+const Cobot = require('./models/cobot')
 
-Door.open()
+Cobot.authorize().then(cobot => {
+  cobot.cards().then(resp => console.log('RESP:', resp))
+})
+
+// const server = require('./server')
+
+// server()
+
+// const Cards = require('./models/cards')
+// const Door = require('./models/door')
+
+// Door.open()
+
+// Cards.update()
 
 // const server = require('./server')
 

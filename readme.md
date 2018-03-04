@@ -66,6 +66,10 @@ t2 erase
 t2 ap -n doorlock
 ```
 
+### Networking
+
+To find the IP address of your Tessel, download the iOS app Fing and look for a device on your network called `doorlock`.
+
 ### USB Storage
 
 *   Make sure to format USB to be FAT32!
