@@ -17,9 +17,15 @@ The RFID doorlock consists of a few components that allow us to have a offline c
 
 Currently, we are using Cobot to manage our membership as well as RFID card numbers (checkin tokens in Cobot parlance).
 
+Eventually, we can remove Cobot and swap it with our own service if we desire.
+
 #### Tessel Microcontroller
 
-The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript). The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format).
+The doorlock consists of a Tessel microcontroller powered by node.js (JavaScript).
+
+#### USB SD Card List
+
+The doorlock has an attached USB adapter with an SD card to store the member's cards (in `json` format).
 
 #### USB RFID Reader
 
@@ -40,8 +46,6 @@ Whether a success or failure, we show details on an attached OLED display as wel
 When the device first turns on it connects to WiFi and then fetches all the member RFID cards from the Cobot checkin token API and then updates the `json` card file. It completely overwrites the existing list of cards. If there is a failure getting the cards, we keep the original card list as a fallback.
 
 We periodically sync this list every few minutes (configurable).
-
-Eventually, we can remove Cobot and swap it with our own service if we desire.
 
 #### Access Log
 
