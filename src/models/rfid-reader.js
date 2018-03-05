@@ -25,4 +25,18 @@ class RFIDReader {
   }
 }
 
+// const RFIDReader = require('./models/rfid-reader')
+
+// console.log(RFIDReader.devices())
+// const reader = RFIDReader.reader()
+
+// reader.on('data', data => console.log(data))
+// reader.close()
+
+// new Promise(resolve => {
+//   setTimeout(() => resolve(), 10000)
+// })
+
+// console.log('READER:', reader)
+
 module.exports = RFIDReader
