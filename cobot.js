@@ -6,7 +6,7 @@ const {
   COBOT_SCOPE,
   COBOT_USER_EMAIL,
   COBOT_USER_PASSWORD,
-} = require('../constants')
+} = require('./constants')
 
 class Cobot {
   constructor(token) {
