@@ -1,10 +1,10 @@
 {
   "name": "doorlock",
   "version": "0.1.0",
-  "main": "src/boot.js",
+  "main": "doorlock.js",
   "scripts": {
-    "deploy": "t2 run src/boot.js",
-    "start": "node src/boot.js",
+    "deploy": "t2 run doorlock.js",
+    "start": "node doorlock.js",
     "test": "jest",
     "watch-test": "npm test -- --watch"
   },

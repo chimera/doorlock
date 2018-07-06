@@ -1,6 +1,6 @@
 const path = require('path')
 
-require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
+require('dotenv').config({ path: path.join(__dirname, '.env') })
 
 const ENV = process.env.NODE_ENV || 'development'
 const USB_MOUNT_PATH = process.env.USB_MOUNT_PATH || '/mnt/sda1'
