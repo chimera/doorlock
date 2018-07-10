@@ -1,0 +1,9 @@
+extends ./layout.pug
+
+block title
+  | Scan Card
+
+block content
+  h1.page-heading Scan Your Card
+  form(action='/checkin' method='post')
+    input#rfid.input.input-block(name="rfid" autofocus)

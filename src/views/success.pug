@@ -1,0 +1,18 @@
+
+extends ./layout.pug
+
+block title
+  | Scanned Successfully!
+
+block content
+  .df.ai-center.jc-center.bg-success.white.px-lg.py-md
+    i.fas.fa-check.mr-lg.txt-xxl
+    .f-1
+      .txt-xl Welcome in #{name}!
+      .mt-sm.success-lighter Have an awesome day of making!
+  p
+    a(href='/') ← Back
+
+  script.
+    //- setTimeout(function () { window.location.href = '/' }, 6000)
+

@@ -4,24 +4,29 @@
   "main": "doorlock.js",
   "scripts": {
     "deploy": "t2 run doorlock.js",
-    "start": "node doorlock.js",
+    "start": "forever start src/server.js",
     "test": "jest",
+    "watch": "nodemon src/server.js",
     "watch-test": "npm test -- --watch"
   },
   "dependencies": {
     "axios": "0.18.0",
+    "body-parser": "1.18.3",
     "chalk": "2.3.1",
     "dotenv": "5.0.1",
-    "serialport": "6.2.0",
-    "tessel": "0.3.25"
+    "express": "4.16.3",
+    "helmet": "3.12.1",
+    "moment": "2.22.2",
+    "pug": "2.0.3",
+    "serialport": "6.2.0"
   },
   "devDependencies": {
     "babel-eslint": "8.2.2",
     "eslint": "4.19.1",
     "eslint-plugin-react": "7.7.0",
+    "forever": "0.15.3",
     "jest": "22.4.2",
-    "nodemon": "1.17.5",
-    "t2-cli": "0.1.18"
+    "nodemon": "1.18.0"
   },
   "optionalDependencies": {
     "fsevents": "*"

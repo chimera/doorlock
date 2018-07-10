@@ -23,9 +23,4 @@ rules:
   semi:
     - error
     - never
-  sort-vars: error
-  sort-imports:
-    - error
-    - ignoreCase: true
-  sort-keys: error
   react/jsx-sort-prop: true

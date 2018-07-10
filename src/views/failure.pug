@@ -1,0 +1,19 @@
+
+
+extends ./layout.pug
+
+block title
+  | Scanned Failed!
+
+block content
+  .df.ai-center.jc-center.bg-danger.white.px-lg.py-md
+    i.fas.fa-times.mr-lg.txt-xxl
+    .f-1
+      .txt-xl Card not valid
+      .mt-sm.danger-lighter Sorry your card isn't valid. Maybe your membership has expired?
+  p
+    a(href='/') ← Back
+
+  script.
+    //- setTimeout(function () { window.location.href = '/' }, 6000)
+

@@ -1,0 +1,18 @@
+
+extends ./layout.pug
+
+block title
+  | Cards
+
+block content
+  h1.page-heading Cards
+  table.collapse.w-100
+    thead
+      tr
+        th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Member Name
+        th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 RFID Card Number
+    tbody
+      for card in cards
+        tr.hov-bg-gray-lightest
+          td.px-md.py-sm.bb.bc-gray-lighter= card.name
+          td.px-md.py-sm.bb.bc-gray-lighter= card.number
