@@ -37,6 +37,7 @@ app.get('/success', require('./routes/success'))
 app.get('/failure', require('./routes/failure'))
 app.get('/cards', require('./routes/cards'))
 app.get('/logs', require('./routes/logs'))
+app.get('/update', require('./routes/update'))
 app.get('/', (req, res) => res.render('home', {}))
 
 app.listen(PORT, () => console.log('Example app listening on port 3000!'))

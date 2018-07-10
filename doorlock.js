@@ -5,6 +5,7 @@ const https = require('https')
 const fs = require('fs')
 const SerialPort = require('serialport')
 const tessel = require('tessel')
+const relaylib = require('relay-mono')
 const {
   CARD_UPDATE_INTERVAL,
   CARDS_PATH,
@@ -20,6 +21,22 @@ const {
 } = require('./constants')
 
 const TEST = ENV === 'test'
+
+const relay = relaylib.use(tessel.port['A'])
+
+relay.on('ready', function relayReady() {
+  console.log('Ready!')
+  relay.turnOff(1, function toggleOneResult(err) {
+    if (err) console.log('Err toggling 1', err)
+  })
+  relay.turnOff(2, function toggleOneResult(err) {
+    if (err) console.log('Err toggling 1', err)
+  })
+})
+
+relay.on('latch', function(channel, value) {
+  console.log('latch on relay channel ' + channel + ' switched to', value)
+})
 
 class Cobot {
   constructor(token) {
@@ -206,53 +223,57 @@ class DoorLock {
     return device.pipe(parser)
   }
 
-  validateCard(number) {
-    console.log('raw:', JSON.stringify(number.toString().trim()))
-    const scanned = parseInt(
-      number
-        .toString('hex')
-        .trim() // Remove any whiespace or newlines
-        .replace('\u0003', '') // Remove "end of text" character
-        .replace('\u0002', '') // Remove "start of text" character
-        .substring(3) // Strip off con
-        .slice(0, -2), // Strip off checksum
-      16
-    )
+  // validateCard(number) {
+  //   console.log('raw:', JSON.stringify(number.toString().trim()))
+  //   const scanned = parseInt(
+  //     number
+  //       .toString('hex')
+  //       .trim() // Remove any whiespace or newlines
+  //       .replace('\u0003', '') // Remove "end of text" character
+  //       .replace('\u0002', '') // Remove "start of text" character
+  //       .substring(3) // Strip off con
+  //       .slice(0, -2), // Strip off checksum
+  //     16
+  //   )
 
-    this.log('Scanned card:', scanned)
+  //   this.log('Scanned card:', scanned)
 
-    return this.readCardsFromSDCard().then(cards => {
-      const card = cards.find(c => parseInt(c.number) === scanned)
+  //   return this.readCardsFromSDCard().then(cards => {
+  //     const card = cards.find(c => parseInt(c.number) === scanned)
 
-      if (card) {
-        const name = card.name.split(' ')[0]
-        this.log(`Welcome in ${name}!`, scanned)
-        this.openDoor()
-      } else {
-        this.log('Card is invalid:', scanned)
-      }
-    })
-  }
+  //     if (card) {
+  //       const name = card.name.split(' ')[0]
+  //       this.log(`Welcome in ${name}!`, scanned)
+  //       this.openDoor()
+  //     } else {
+  //       this.log('Card is invalid:', scanned)
+  //     }
+  //   })
+  // }
 
-  openDoor() {
-    return new Promise(resolve => {
-      this.log('Opening door!')
+  // openDoor() {
+  //   return new Promise(resolve => {
+  //     this.log('Opening door!')
 
-      // TODO: trigger door opening...
-      if (tessel.led) tessel.led[3].on()
+  //     // TODO: trigger door opening...
+  //     if (tessel.led) tessel.led[3].on()
+  //     relay.turnOn(1, console.log)
+  //     relay.turnOn(2, console.log)
 
-      setTimeout(() => {
-        // TODO: trigger door closing
-        this.closeDoor()
-        resolve()
-      }, DOOR_OPEN_DELAY)
-    })
-  }
+  //     setTimeout(() => {
+  //       // TODO: trigger door closing
+  //       this.closeDoor()
+  //       resolve()
+  //     }, DOOR_OPEN_DELAY)
+  //   })
+  // }
 
-  closeDoor() {
-    this.log('Closing door!')
-    if (tessel.led) tessel.led[3].off()
-  }
+  // closeDoor() {
+  //   this.log('Closing door!')
+  //   if (tessel.led) tessel.led[3].off()
+  //   relay.turnOff(1, console.log)
+  //   relay.turnOff(2, console.log)
+  // }
 
   fetchCardListFromCobot() {
     this.log('Updating cards...')
@@ -274,31 +295,31 @@ class DoorLock {
       .catch(this.logErrorMessage)
   }
 
-  sortCardsByName(cards) {
-    const sorted = cards.sort(
-      (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
-    )
-    return sorted
-  }
+  // sortCardsByName(cards) {
+  //   const sorted = cards.sort(
+  //     (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+  //   )
+  //   return sorted
+  // }
 
-  writeCardsToSDCard(cards) {
-    const json = JSON.stringify(this.sortCardsByName(cards))
-    return new Promise((resolve, reject) => {
-      fs.writeFile(CARDS_PATH, json, err => {
-        if (err) return reject(err)
-        resolve()
-      })
-    })
-  }
+  // writeCardsToSDCard(cards) {
+  //   const json = JSON.stringify(this.sortCardsByName(cards))
+  //   return new Promise((resolve, reject) => {
+  //     fs.writeFile(CARDS_PATH, json, err => {
+  //       if (err) return reject(err)
+  //       resolve()
+  //     })
+  //   })
+  // }
 
-  readCardsFromSDCard() {
-    return new Promise((resolve, reject) => {
-      fs.readFile(CARDS_PATH, (err, data) => {
-        if (err) return reject(err)
-        resolve(JSON.parse(data))
-      })
-    })
-  }
+  // readCardsFromSDCard() {
+  //   return new Promise((resolve, reject) => {
+  //     fs.readFile(CARDS_PATH, (err, data) => {
+  //       if (err) return reject(err)
+  //       resolve(JSON.parse(data))
+  //     })
+  //   })
+  // }
 
   logErrorMessage(error) {
     if (TEST) return

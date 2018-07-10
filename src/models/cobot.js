@@ -1,3 +1,4 @@
+const Cards = require('./cards')
 const https = require('https')
 const {
   CARD_UPDATE_INTERVAL,
@@ -7,7 +8,7 @@ const {
   COBOT_SCOPE,
   COBOT_USER_EMAIL,
   COBOT_USER_PASSWORD,
-} = require('./constants')
+} = require('../../constants')
 
 module.exports = class Cobot {
   constructor(token) {
@@ -144,22 +145,17 @@ module.exports = class Cobot {
   }
 
   static getCards() {
-    this.log('Updating cards...')
-    this.authorize()
+    console.log('Updating cards...')
+    return this.authorize()
       .then(cobot => cobot.cards())
-      .then(cards => {
-        this.log('UPDATED CARDS:', cards.length, 'cards')
-        this.writeCardsToSDCard(cards)
-        this.cards = cards
-      })
-      .then(() => {
-        this.log(
-          'Updating card list in',
-          CARD_UPDATE_INTERVAL / 1000,
-          'seconds...'
-        )
-        setTimeout(this.fetchCardListFromCobot.bind(this), CARD_UPDATE_INTERVAL)
-      })
-      .catch(this.logErrorMessage)
+      .then(cards => Cards.write(cards))
+    // .then(() => {
+    //   console.log(
+    //     'Updating card list in',
+    //     CARD_UPDATE_INTERVAL / 1000,
+    //     'seconds...'
+    //   )
+    //   setTimeout(this.getCards.bind(this), CARD_UPDATE_INTERVAL)
+    // })
   }
 }

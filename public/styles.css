@@ -47,6 +47,7 @@ p {
 .button:hover {
   background: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
+  color: white;
 }
 .button-danger {
   background: var(--color-danger);

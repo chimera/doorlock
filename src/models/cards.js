@@ -15,6 +15,7 @@ module.exports = class Cards {
 
   static write(cards) {
     const json = JSON.stringify(this.sortByName(cards))
+    console.log('WRITING CARDS:', json)
     return new Promise((resolve, reject) => {
       fs.writeFile(CARDS_PATH, json, err => {
         if (err) return reject(err)
@@ -24,7 +25,9 @@ module.exports = class Cards {
   }
 
   static validate(number) {
-    return this.all().then(cards => cards.find(c => c.number === number))
+    return this.all().then(cards =>
+      cards.find(c => parseInt(c.number, 10) === parseInt(number, 10))
+    )
     // console.log(':', JSON.stringify(number.toString().trim()))
     // const scanned = parseInt(
     //   number
