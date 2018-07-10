@@ -1,9 +1,9 @@
 module.exports = class Door {
   static open() {
-    console.log('OPEN')
+    console.log('OPEN DOOR!!!!!!!!!!!!!!')
   }
 
-  static close() {
-    console.log('CLOSE')
-  }
+  // static close() {
+  //   console.log('CLOSE DOOR!!!!!!!!!!!!')
+  // }
 }

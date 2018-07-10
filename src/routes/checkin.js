@@ -1,4 +1,5 @@
 const Cards = require('../models/cards')
+const Door = require('../models/door')
 const Logs = require('../models/logs')
 
 module.exports = (req, res) => {
@@ -7,14 +8,12 @@ module.exports = (req, res) => {
 
   Cards.validate(rfid).then(card => {
     console.log('CARD:', card)
-    // TODO: add to log if success
-    if (card) {
-      res.redirect('/success?name=' + card.name)
-      Logs.log({ timestamp: new Date().getTime(), card }).then(() =>
-        console.log('Logged!')
-      )
-    } else {
-      res.redirect('/failure')
-    }
+    if (!card) return res.redirect('/failure')
+
+    Door.open()
+    res.redirect('/success?name=' + card.name)
+    Logs.log({ timestamp: new Date().getTime(), card }).then(() =>
+      console.log('Logged!')
+    )
   })
 }
