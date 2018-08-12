@@ -1,6 +1,19 @@
+const { Board } = require('easy-usb-relay')
+
+const DELAY = 6000
+
 module.exports = class Door {
   static open() {
-    console.log('OPEN DOOR!!!!!!!!!!!!!!')
+    return new Promise(success => {
+      console.log('OPEN DOOR!')
+      const board = new Board(2)
+      board.allOn()
+      setTimeout(() => {
+        console.log('CLOSING DOOR!')
+        board.allOff()
+        success()
+      }, DELAY)
+    })
   }
 
   // static close() {

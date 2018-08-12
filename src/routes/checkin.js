@@ -10,10 +10,10 @@ module.exports = (req, res) => {
     console.log('CARD:', card)
     if (!card) return res.redirect('/failure')
 
-    Door.open()
     res.redirect('/success?name=' + card.name)
     Logs.log({ timestamp: new Date().getTime(), card }).then(() =>
       console.log('Logged!')
     )
+    Door.open()
   })
 }
