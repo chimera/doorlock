@@ -10,10 +10,12 @@ block content
     i.fas.fa-times.mr-lg.txt-xxl
     .f-1
       .txt-xl Card not valid
-      .mt-sm.danger-lighter Sorry your card isn't valid. Maybe your membership has expired?
+      .mt-sm.danger-lighter Sorry your card isn't valid. Please try again.
+      .mt-sm.danger-lighter
+        em Maybe your membership has expired?
   p
     a(href='/') ← Back
 
   script.
-    //- setTimeout(function () { window.location.href = '/' }, 6000)
+    setTimeout(function () { window.location.href = '/' }, 6000)
 
