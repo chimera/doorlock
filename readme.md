@@ -1,9 +1,16 @@
 # Chimera Doorlock
 
+## Overview
+
+-   Cards are synced with Cobot
+-   Cards are stored in `cards.json` in the root of the project (should be `~/doorlock/cards.json` on the RaspberryPi)
+-   Logs are stored in `logs.json` in the root of the project (should be `~/doorlock/logs.json` on the RaspberryPi)
+
 ## TODO
 
 -   [ ] Update list of cards every few minutes
 -   [ ] Push up logs/checkins to management app
+-   [ ] Get working with Nexedus
 -   [ ] Handle error message
 
 ## Configuring Raspberry Pi
@@ -35,6 +42,15 @@ vi .env
 
 # Start app
 forever start src/server.js
+```
+
+Follow the [install from source guide for node-hid](https://github.com/node-hid/node-hid#compiling-from-source) becuase there is no pre-built binary for RaspberryPi
+
+```
+npm install -g node-gyp
+sudo apt install build-essential git libudev-dev gcc-4.8 g++-4.8 libusb-1.0-0 libusb-1.0-0-dev
+export CXX=g++-4.8
+npm install node-hid --build-from-source
 ```
 
 You should now be able to view the app at
