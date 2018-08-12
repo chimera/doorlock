@@ -18,11 +18,11 @@
 On the RPI:
 
 ```bash
+# Change to "sudo" user
+sudo su
+
 # Install nvm
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-
-# Install the USB relay driver
-# sudo apt-get install usbrelay
 
 # Install forever
 npm i -g forever
@@ -48,7 +48,7 @@ Follow the [install from source guide for node-hid](https://github.com/node-hid/
 
 ```
 npm install -g node-gyp
-sudo apt install build-essential git libudev-dev gcc-4.8 g++-4.8 libusb-1.0-0 libusb-1.0-0-dev
+apt install build-essential git libudev-dev gcc-4.8 g++-4.8 libusb-1.0-0 libusb-1.0-0-dev
 export CXX=g++-4.8
 npm install node-hid --build-from-source
 ```
@@ -58,6 +58,7 @@ You should now be able to view the app at
 Place this at the bottom of your `~/.bashrc` file:
 
 ```bash
+alias node='$NVM_BIN/node'
 forever start ~/doorlock/src/server.js
 chromium-browser --kiosk localhost:3000
 ```
