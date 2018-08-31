@@ -53,15 +53,15 @@ export CXX=g++-4.8
 npm install node-hid --build-from-source
 ```
 
-You should now be able to view the app at
+You should now be able to view the app at http://localhost:3000
 
-Place this at the bottom of your `~/.bashrc` file:
+# Autostart
 
-```bash
-alias node='$NVM_BIN/node'
-forever start ~/doorlock/src/server.js
-chromium-browser --kiosk localhost:3000
-```
+On a RasPi, copy the contents of the autostart file into: `~/.config/lxsession/LXDE-pi/autostart`
+
+Optionally, to help users with debugging, run `ln -s /home/pi/doorlock/start.sh ~/Desktop/start-doorlock.sh` to give them a link on the desktop.
+
+Or generally, find some way to run `./start.sh` in this folder
 
 ## Further reading
 
