@@ -6,38 +6,46 @@ $(function(){
     }, 20000);
 
     $("#rfid").keydown(function(event){
-        // cancel enter keys
+        // prevent enter key from submitting form; we want AJAX if possible
         if (event.keyCode === 13){
             return false;
         }
-
+    }).keyup(function(event){
         // store value
         value = $("#rfid").val();
 
-        // start processing after the first few chars
-        if (value.length >= 5) {
+        // start processing after the enter key
+        if (event.keyCode === 13) {
             // wait to send the request for a sec to let them finish typing
             setTimeout(function(){
                 // clear input box
                 $("#rfid").val(null);
                 // post value to server
                 loading(true);
-                $.post("/checkin", {"rfid":value}, function(data){
-                    console.log(data);
-                    if (data.hasOwnProperty("success")) {
-                        if (data.success) {
-                            success(data.name);
+                if (!window.checkinLoading) {
+                    // use global var to prevent simultaneous posts
+                    window.checkinLoading = true;
+                    console.log("Checking in...");
+                    $.post("/checkin", {"rfid":value}, function(data){
+                        console.log(data);
+                        if (data.hasOwnProperty("success")) {
+                            if (data.success) {
+                                success(data.name);
+                            } else {
+                                failure();
+                            }
                         } else {
-                            failure();
+                            error();
                         }
-                    } else {
+                    }, "json").fail(function(){
                         error();
-                    }
-                }, "json").fail(function(){
-                    error();
-                }).always(function(){
-                    loading(false);
-                });
+                    }).always(function(){
+                        loading(false);
+                        window.checkinLoading = false;
+                    });
+                } else {
+                    console.log("Already checking in; canceled.");
+                }
             }, 250);
         }
     });
@@ -61,19 +69,25 @@ function reset(){
 
 function success(name){
     reset();
-    $("#name").text(name);
-    $("#success").removeClass("dn");
-    setTimeout(function(){ reset(); }, 5000);
+    setTimeout(function(){
+        $("#name").text(name);
+        $("#success").removeClass("dn");
+        setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
+    }, 250);
 }
 
 function failure(){
     reset();
-    $("#failure").removeClass("dn");
-    setTimeout(function(){ reset(); }, 5000);
+    setTimeout(function(){
+        $("#failure").removeClass("dn");
+        setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
+    }, 250);
 }
 
 function error(){
     reset();
-    $("#error").removeClass("dn");
-    setTimeout(function(){ reset(); }, 5000);
+    setTimeout(function(){
+        $("#error").removeClass("dn");
+        setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
+    }, 250);
 }

@@ -26,7 +26,7 @@ module.exports = (req, res) => {
 function reponse(req,res,path,success,name=null) {
   console.log(req.get('accept'));
   if(/application\/json/.test(req.get('accept'))) {
-    res.json({"success":success, "path":path})
+    res.json({"success":success, "path":path, "name":name})
   } else {
     res.redirect(path)
   }
