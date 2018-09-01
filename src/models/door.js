@@ -7,12 +7,12 @@ module.exports = class Door {
     return new Promise(success => {
       console.log('OPEN DOOR!')
       const board = new Board(2)
+      success(board.allOn())
       setTimeout(() => {
         console.log('CLOSING DOOR!')
         board.allOff()
         success()
       }, DELAY)
-      return board.allOn()
     })
   }
 
