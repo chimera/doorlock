@@ -10,15 +10,16 @@ block content
     thead
       tr
         th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Date
+        th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Type
+        th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Status
         th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Member Name
         th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 RFID Card Number
     tbody
       for log in logs
-        - date = new Date(log.timestamp)
+        - date = log.timestamp ? new Date(log.timestamp) : ""
         tr.hov-bg-gray-lightest
-          td.px-md.py-sm.bb.bc-gray-lighter.c-help(title=date)= moment(date).fromNow()
+          td.px-md.py-sm.bb.bc-gray-lighter.c-help(title=date)= date ? moment(date).fromNow() : ""
+          td.px-md.py-sm.bb.bc-gray-lighter= log.level
+          td.px-md.py-sm.bb.bc-gray-lighter= log.message
           td.px-md.py-sm.bb.bc-gray-lighter= log.card ? log.card.name : ""
           td.px-md.py-sm.bb.bc-gray-lighter= log.card ? log.card.number : ""
-          td.px-md.py-sm.bb.bc-gray-lighter= log.err ? log.err.code : ""
-          td.px-md.py-sm.bb.bc-gray-lighter= log.err ? log.err.syscall : ""
-          td.px-md.py-sm.bb.bc-gray-lighter= log.err ? log.err.path : ""

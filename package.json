@@ -19,7 +19,8 @@
     "moment": "2.22.2",
     "node-hid": "0.7.3",
     "pug": "2.0.3",
-    "serialport": "6.2.0"
+    "serialport": "6.2.0",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "8.2.2",

@@ -35,10 +35,10 @@ $(function(){
                                 failure();
                             }
                         } else {
-                            error();
+                            error(data);
                         }
-                    }, "json").fail(function(){
-                        error();
+                    }, "json").fail(function(res){
+                        error(res.responseText);
                     }).always(function(){
                         loading(false);
                         window.checkinLoading = false;
@@ -65,6 +65,7 @@ function reset(){
     $("#failure").addClass("dn");
     $("#success").addClass("dn");
     $("#error").addClass("dn");
+    $("#errormessage").text("Something went wrong with the card reader.");
 }
 
 function success(name){
@@ -84,10 +85,14 @@ function failure(){
     }, 250);
 }
 
-function error(){
+function error(msg){
+    console.log(msg);
     reset();
     setTimeout(function(){
         $("#error").removeClass("dn");
+        if (msg) {
+            $("#errormessage").text(msg);
+        }
         setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
     }, 250);
 }

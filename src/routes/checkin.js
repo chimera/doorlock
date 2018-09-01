@@ -1,6 +1,6 @@
 const Cards = require('../models/cards')
 const Door = require('../models/door')
-const Logs = require('../models/logs')
+const logger = require('../models/logger')
 
 module.exports = (req, res) => {
   const rfid = req.body.rfid.trim().toLowerCase()
@@ -8,26 +8,30 @@ module.exports = (req, res) => {
 
   Cards.validate(rfid).then(card => {
     console.log('CARD:', card)
-    if (!card) return reponse(req,res,'/failure',false)
+    if (!card) {
+      logger.logRejectedCard({number: rfid})
+      return reponse(req,res,'/failure',false)
+    }
 
-    reponse(req,res,'/success?name=' + card.name,true,card.name)
-    Logs.log({ timestamp: new Date().getTime(), card }).then(() =>
-      console.log('Logged!')
-    )
-    Door.open()
+    logger.logGrantedCard(card)
+    Door.open().then(resp => {
+      reponse(req,res,'/success?name=' + card.name,true,card.name)
+    }).catch(err => {
+      logger.logError(card, err.message)
+      res.status(500).send("Error: "+err)
+    })
   }).catch(err => {
-    reponse(req,res,'/failure',false)
-    Logs.log({ timestamp: new Date().getTime(), err}).then(() =>
-      console.log('Undefined failure: '+err)
-    )
+    logger.logError({number: rfid}, err.message)
+    res.status(500).send("Error: "+err)
   })
 }
 
-function reponse(req,res,path,success,name=null) {
-  console.log(req.get('accept'));
+function reponse(req,res,path,success,name=null,message=null) {
   if(/application\/json/.test(req.get('accept'))) {
-    res.json({"success":success, "path":path, "name":name})
+    console.log("returning json", success)
+    res.json({"success":success, "path":path, "name":name, "message": message})
   } else {
+    console.log("returning redir")
     res.redirect(path)
   }
 }

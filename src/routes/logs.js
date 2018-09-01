@@ -1,8 +1,9 @@
-const Logs = require('../models/logs')
+const logger = require('../models/logger')
 
 module.exports = (req, res) => {
-  Logs.all().then(logs => {
-    logs = logs.sort((a, b) => a.timestamp < b.timestamp)
+
+  logger.readLogs().then(logs => {
+    logs = logs.reverse()
     res.render('logs', { logs })
   })
 }
