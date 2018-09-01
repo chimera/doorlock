@@ -12,6 +12,7 @@
     "axios": "0.18.0",
     "body-parser": "1.18.3",
     "chalk": "2.3.1",
+    "connect-timeout": "^1.9.0",
     "dotenv": "5.0.1",
     "easy-usb-relay": "0.0.4",
     "express": "4.16.3",
