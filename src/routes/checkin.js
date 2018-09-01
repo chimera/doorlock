@@ -8,12 +8,26 @@ module.exports = (req, res) => {
 
   Cards.validate(rfid).then(card => {
     console.log('CARD:', card)
-    if (!card) return res.redirect('/failure')
+    if (!card) return reponse(req,res,'/failure',false)
 
-    res.redirect('/success?name=' + card.name)
+    reponse(req,res,'/success?name=' + card.name,true,card.name)
     Logs.log({ timestamp: new Date().getTime(), card }).then(() =>
       console.log('Logged!')
     )
     Door.open()
+  }).catch(err => {
+    reponse(req,res,'/failure',false)
+    Logs.log({ timestamp: new Date().getTime(), err}).then(() =>
+      console.log('Undefined failure: '+err)
+    )
   })
+}
+
+function reponse(req,res,path,success,name=null) {
+  console.log(req.get('accept'));
+  if(/application\/json/.test(req.get('accept'))) {
+    res.json({"success":success, "path":path})
+  } else {
+    res.redirect(path)
+  }
 }

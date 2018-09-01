@@ -7,3 +7,35 @@ block content
   h1.page-heading Scan Your Card
   form(action='/checkin' method='post')
     input#rfid.input.input-block(name="rfid" autofocus)
+
+  section#failure.dn
+    .df.ai-center.jc-center.bg-danger.white.px-lg.py-md
+      i.fas.fa-times.mr-lg.txt-xxl
+      .f-1
+        .txt-xl Card not valid
+        .mt-sm.danger-lighter Sorry your card isn't valid. Please try again.
+        .mt-sm.danger-lighter
+          em Maybe your membership has expired?
+
+  section#success.dn
+    .df.ai-center.jc-center.bg-success.white.px-lg.py-md
+      i.fas.fa-check.mr-lg.txt-xxl
+      .f-1
+        .txt-xl
+          | Welcome in 
+          span#name
+          | !
+        .mt-sm.success-lighter Have an awesome day of making!
+
+  section#error.dn
+    .df.ai-center.jc-center.bg-warning.white.px-lg.py-md
+      i.fas.fa-exclamation.mr-lg.txt-xxl
+      .f-1
+        .txt-xl Error
+        .mt-sm.warning-lighter Something went wrong with the card reader.
+        .mt-sm.warning-lighter
+          em We're sorry. Please contact a volunteer.
+
+  section#loading.dn
+    .df.ai-center.jc-center.px-lg.py-md
+      i.fas.fa-spinner.fa-spin.mr-lg.txt-xxl

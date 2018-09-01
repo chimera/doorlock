@@ -65,7 +65,7 @@ Or generally, find some way to run `./start.sh` in this folder
 
 ## Further reading
 
--   [USB Relay librar](https://github.com/darrylb123/usbrelay)
+-   [USB Relay library](https://github.com/darrylb123/usbrelay)
 -   https://obrienlabs.net/setup-raspberry-pi-kiosk-chromium/
 
 ## Contributing
@@ -88,4 +88,4 @@ MIT
 [dana]: http://danawoodman.com
 [jest]: https://facebook.github.io/jest
 [latch]: https://www.amazon.com/gp/product/B00V45GWTI
-[start]: http://tessel.github.io/t2-start
+[relay]: http://a.co/d/hbuockB

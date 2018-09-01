@@ -7,7 +7,7 @@ module.exports = class Logs {
   static all() {
     return new Promise((resolve, reject) => {
       fs.readFile(LOGS_PATH, (err, data) => {
-        if (err) return reject(err)
+        if (err) return resolve(JSON.parse("[]"))
         resolve(JSON.parse(data))
       })
     })
