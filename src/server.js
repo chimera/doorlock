@@ -39,4 +39,5 @@ app.get('/logs', require('./routes/logs'))
 app.get('/update', require('./routes/update'))
 app.get('/', (req, res) => res.render('home', {}))
 
-app.listen(PORT, () => console.log('Example app listening on port 3000!'))
+var server = app.listen(PORT, () => console.log('Doorlock app listening at http://localhost:3000 !'))
+server.timeout = 10000 // 10 sec is super long for our requests
