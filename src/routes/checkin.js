@@ -28,10 +28,8 @@ module.exports = (req, res) => {
 
 function reponse(req,res,path,success,name=null,message=null) {
   if(/application\/json/.test(req.get('accept'))) {
-    console.log("returning json", success)
     res.json({"success":success, "path":path, "name":name, "message": message})
   } else {
-    console.log("returning redir")
     res.redirect(path)
   }
 }
