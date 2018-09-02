@@ -57,7 +57,7 @@ You should now be able to view the app at http://localhost:3000
 
 # Autostart
 
-On a RasPi, copy the contents of the autostart file into: `~/.config/lxsession/LXDE-pi/autostart`
+On a RasPi, copy the contents of the autostart file into: `~/.config/lxsession/LXDE-pi/autostart` (presuming you've downloaded this repo to `/home/pi/doorlock`)
 
 Optionally, to help users with debugging, run `ln -s /home/pi/doorlock/start.sh ~/Desktop/start-doorlock.sh` to give them a link on the desktop.
 

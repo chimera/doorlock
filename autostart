@@ -1,0 +1,9 @@
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+#@xscreensaver -no-splash
+@point-rpi
+
+@xset s noblank
+@xset s off
+@xset -dpms
+@bash /home/pi/doorlock/start.sh
