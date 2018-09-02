@@ -1,8 +1,9 @@
 $(function(){
-    // refocus and clear the input box every 20sec
+    // refocus and clear the input box and relay every 20sec for failsafe
     setInterval(function(){
         $("#rfid").focus();
         $("#rfid").val(null);
+        window.relayActivated = false;
     }, 20000);
 
     $("#rfid").keydown(function(event){
@@ -22,7 +23,7 @@ $(function(){
                 $("#rfid").val(null);
                 // post value to server
                 loading(true);
-                if (!window.checkinLoading) {
+                if (!window.checkinLoading && !window.relayActivated) {
                     // use global var to prevent simultaneous posts
                     window.checkinLoading = true;
                     console.log("Checking in...");
@@ -31,6 +32,7 @@ $(function(){
                         if (data.hasOwnProperty("success")) {
                             if (data.success) {
                                 success(data.name);
+                                window.relayActivated = true;
                             } else {
                                 failure();
                             }
@@ -66,6 +68,7 @@ function reset(){
     $("#success").addClass("dn");
     $("#error").addClass("dn");
     $("#errormessage").text("Something went wrong with the card reader.");
+    loading(false);
 }
 
 function success(name){
@@ -73,7 +76,11 @@ function success(name){
     setTimeout(function(){
         $("#name").text(name);
         $("#success").removeClass("dn");
-        setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
+        setTimeout(function(){
+            reset();
+            // this is the only time when the relay is reset, besides the 20-sec reset
+            window.relayActivated = false;
+        }, 6000); // 6000 to match door.js(const DELAY)
     }, 250);
 }
 
