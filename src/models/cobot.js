@@ -121,11 +121,11 @@ module.exports = class Cobot {
             const body = JSON.parse(chunk)
             console.log(JSON.stringify({ body }, null, 2))
             const token = body.access_token
-            if (!token) {
-              console.error(`Expected access token, got: ${body}`)
-              throw new Error('Error getting access token')
+            if (token) {
+                cobot = new Cobot(token)
+            } else {
+                console.error(`Expected access token, got: ${body}`)
             }
-            cobot = new Cobot(token)
           })
 
           res.on('end', () => {

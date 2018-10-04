@@ -1,6 +1,6 @@
 cards.json
 logs.json
-logs.log
+*.log
 
 .env
 node_modules

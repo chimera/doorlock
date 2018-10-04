@@ -40,6 +40,17 @@ app.use(haltOnTimedout)
 app.locals.moment = moment
 app.use(haltOnTimedout)
 
+
+//---------------------------------------------------------
+// Begin by locking door, you never know.
+//---------------------------------------------------------
+
+const { Board } = require('easy-usb-relay')
+const board = new Board(2)
+console.log('Booting up. Locking door just in case.')
+board.allOff()
+
+
 //---------------------------------------------------------
 // Routes
 //---------------------------------------------------------

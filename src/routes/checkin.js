@@ -17,11 +17,11 @@ module.exports = (req, res) => {
     Door.open().then(resp => {
       reponse(req,res,'/success?name=' + card.name,true,card.name)
     }).catch(err => {
-      logger.logError(card, err.message)
+      logger.logError(card, err)
       res.status(500).send("Error: "+err)
     })
   }).catch(err => {
-    logger.logError({number: rfid}, err.message)
+    logger.logError({number: rfid}, err)
     res.status(500).send("Error: "+err)
   })
 }

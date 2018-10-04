@@ -8,10 +8,12 @@
 
 ## TODO
 
--   [ ] Update list of cards every few minutes
+-   [ ] Update list of cards every few minutes from Cobot
 -   [ ] Push up logs/checkins to management app
 -   [ ] Get working with Nexedus
--   [ ] Handle error message
+-   [ ] Protect card and log pages such that people can't just login to the wifi and copy-paste card ID numbers into the form
+-   [ ] Handle card reading directly in hardware, no ability to manually type into the webform
+-   [ ] Log error messages and other app issues remotely
 
 ## Configuring Raspberry Pi
 
