@@ -217,6 +217,14 @@ module.exports = class Cobot {
           })
         }
       )
+
+      req.on('socket', function (socket) {
+          socket.setTimeout(9000);
+          socket.on('timeout', function() {
+              req.abort();
+          });
+      });
+
       req.on('error', e => reject(e))
       req.end()
     })
@@ -226,7 +234,7 @@ module.exports = class Cobot {
   }
 
   static doCheckin(card) {
-    console.log('Checkin in '+card)
+    console.log('Checking in ', card)
     return this.authorize()
       .then(cobot => cobot.checkin(card.membership_id))
     // .then(() => {
