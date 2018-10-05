@@ -16,21 +16,22 @@ module.exports = (req, res) => {
 
     logger.logGrantedCard(card)
 
-    Cobot.doCheckin(card)
-      .then(checkin => {
-        Door.open()
-          .then(door => {
-            data = {"name": card.name, "remaining": checkin.valid_until}
-            reponse(req,res,`/success?name=${card.name}`,true,data)
-          }).catch(err => {
-            logger.logError(card, err)
-            res.status(500).send("Error: "+err).end()
-          })
+    Door.open()
+      .then(door => {
+        data = {"name": card.name, "remaining": checkin.valid_until}
+        reponse(req,res,`/success?name=${card.name}`,true,data)
+      }).catch(err => {
+        logger.logError(card, err)
+        res.status(500).send("Error: "+err).end()
       })
+
+    Cobot.doCheckin(card)
       .catch(err => {
         logger.logError({number: rfid}, err)
-        reponse(req,res,`/failure`,false,err)
+        // reponse(req,res,`/failure`,false,err)
       })
+      // .then(checkin => {
+      // })
   }).catch(err => {
     logger.logError({number: rfid}, err)
     res.status(500).send("Error: "+err).end()
