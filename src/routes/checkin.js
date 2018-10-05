@@ -24,7 +24,7 @@ module.exports = (req, res) => {
             reponse(req,res,`/success?name=${card.name}`,true,data)
           }).catch(err => {
             logger.logError(card, err)
-            res.status(500).send("Error: "+err)
+            res.status(500).send("Error: "+err).end()
           })
       })
       .catch(err => {
@@ -33,14 +33,14 @@ module.exports = (req, res) => {
       })
   }).catch(err => {
     logger.logError({number: rfid}, err)
-    res.status(500).send("Error: "+err)
+    res.status(500).send("Error: "+err).end()
   })
 }
 
 function reponse(req,res,path,success,data) {
   if(/application\/json/.test(req.get('accept'))) {
-    res.json({"success":success, "path":path, "data": data})
+    res.json({"success":success, "path":path, "data": data}).end()
   } else {
-    res.redirect(path)
+    res.redirect(path).end()
   }
 }
