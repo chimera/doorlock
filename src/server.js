@@ -5,10 +5,10 @@ const moment = require('moment')
 const path = require('path')
 const app = express()
 
-const timeout = require('connect-timeout')
-function haltOnTimedout (req, res, next) {
-  if (!req.timedout) next()
-}
+// const timeout = require('connect-timeout')
+// function haltOnTimedout (req, res, next) {
+//   if (!req.timedout) next()
+// }
 
 const PORT = process.env.PORT || 3000
 
@@ -17,28 +17,32 @@ const PORT = process.env.PORT || 3000
 //---------------------------------------------------------
 
 // Time out after 10 secs
-app.use(timeout('10s'))
+// app.use(timeout('10s'))
+app.use(function(req, res, next){
+  req.setTimeout(1) // 1sec timeout
+  next()
+})
 
 // View engine setup
 app.set('views', path.join(process.cwd(), 'src', 'views'))
 app.set('view engine', 'pug')
-app.use(haltOnTimedout)
+// app.use(haltOnTimedout)
 
 // Handle form body content
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(haltOnTimedout)
+// app.use(haltOnTimedout)
 
 // Handle static assets in /public
 app.use(express.static(path.join(process.cwd(), 'public')))
-app.use(haltOnTimedout)
+// app.use(haltOnTimedout)
 
 // Security middleware
 app.use(helmet())
-app.use(haltOnTimedout)
+// app.use(haltOnTimedout)
 
 // Allow moment to be used in templates
 app.locals.moment = moment
-app.use(haltOnTimedout)
+// app.use(haltOnTimedout)
 
 
 //---------------------------------------------------------
