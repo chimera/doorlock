@@ -28,6 +28,9 @@ module.exports = class Cobot {
           hostname: 'chimera.cobot.me',
           method: 'POST',
           path: `/api/memberships/${membership_id}/work_sessions`,
+          secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
+          ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+          honorCipherOrder: true
         },
         res => {
           const { statusCode, headers } = res
@@ -100,6 +103,9 @@ module.exports = class Cobot {
           hostname: 'chimera.cobot.me',
           method: 'GET',
           path: '/api/check_in_tokens',
+          secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
+          ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+          honorCipherOrder: true
         },
         res => {
           const { statusCode, headers } = res
@@ -188,6 +194,9 @@ module.exports = class Cobot {
           hostname: 'www.cobot.me',
           method: 'POST',
           path: `/oauth/access_token?${qs}`,
+          secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
+          ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+          honorCipherOrder: true
         },
         res => {
           const { statusCode, headers } = res

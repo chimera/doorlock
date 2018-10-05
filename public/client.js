@@ -37,6 +37,9 @@ $(function(){
                                 failure(data.data);
                             }
                         } else {
+                            if (typeof data == "object" && data.hasOwnProperty("code")) {
+                              data = data.code;
+                            }
                             error(data);
                         }
                     }, "json").fail(function(res){
