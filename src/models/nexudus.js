@@ -89,6 +89,14 @@ module.exports = class Nexudus {
           })
         }
       )
+
+      req.on('socket', function (socket) {
+          socket.setTimeout(9000);
+          socket.on('timeout', function() {
+              req.abort();
+          });
+      });
+
       req.on('data', console.log)
       req.on('error', e => {
         console.error(e)
