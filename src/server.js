@@ -61,6 +61,7 @@ app.get('/failure', require('./routes/failure'))
 app.get('/cards', require('./routes/cards'))
 app.get('/logs', require('./routes/logs'))
 app.get('/update', require('./routes/update'))
+app.get('/update_nexudus', require('./routes/update_nexudus'))
 app.get('/', (req, res) => res.render('home', {}))
 
 app.listen(PORT, () => console.log('Doorlock app listening at http://localhost:3000 !'))
