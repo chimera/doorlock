@@ -19,15 +19,18 @@ module.exports = (req, res) => {
     Cobot.doCheckin(card)
       .then(checkin => {
         Door.open()
-          .finally(door => {
+          .then(door => {
             data = {"name": card.name, "remaining": checkin.valid_until}
             reponse(req,res,`/success?name=${card.name}`,true,data)
           }).catch(err => {
             logger.logError(card, err)
-            // res.status(500).send("Error: "+err)
+            res.status(500).send("Error: "+err)
           })
       })
-      .catch(console.error)
+      .catch(err => {
+        logger.logError({number: rfid}, err)
+        reponse(req,res,`/failure`,false,err)
+      })
   }).catch(err => {
     logger.logError({number: rfid}, err)
     res.status(500).send("Error: "+err)

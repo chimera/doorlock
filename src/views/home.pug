@@ -12,9 +12,11 @@ block content
     .df.ai-center.jc-center.bg-danger.white.px-lg.py-md
       i.fas.fa-times.mr-lg.txt-xxl
       .f-1
-        .txt-xl Card not valid
-        .mt-sm.danger-lighter Sorry your card isn't valid. Please try again.
-        .mt-sm.danger-lighter
+        #failuretitle.txt-xl Card not valid
+        #failuremessage.mt-sm.danger-lighter
+          | Sorry your card isn't valid. Please try again.
+          br
+          br
           em Maybe your membership has expired?
 
   section#success.dn

@@ -45,8 +45,12 @@ module.exports = class Cobot {
             console.log(output)
             output = JSON.parse(output)
             console.log(JSON.stringify(output, null, 2))
-            if (!output) {
-              throw new Error('No output received from API!')
+
+            if (output && output.base) {
+              return reject(output.base[0])
+            }
+            if (!output || !output.membership) {
+              return reject('No output received from API!')
             }
             resolve(
               {

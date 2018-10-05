@@ -34,7 +34,7 @@ $(function(){
                                 success(data.data);
                                 window.relayActivated = true;
                             } else {
-                                failure();
+                                failure(data.data);
                             }
                         } else {
                             error(data);
@@ -85,10 +85,18 @@ function success(data){
     }, 250);
 }
 
-function failure(){
+function failure(data){
     reset();
+    console.log(data);
     setTimeout(function(){
         $("#failure").removeClass("dn");
+        if (data) {
+            $("#failuretitle").text("Problem with your membership")
+            $("#failuremessage").text(data);
+        } else {
+          $("#failuretitle").text("Card not valid");
+          $("#failuremessage").html("Sorry your card isn't valid. Please try again.<br><br><em>Maybe your membership has expired?</em>");
+        }
         setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
     }, 250);
 }
