@@ -18,10 +18,12 @@ block content
   table.collapse.w-100
     thead
       tr
+        th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Member ID
         th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Member Name
         th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 RFID Card Number
     tbody
       for card in cards
         tr.hov-bg-gray-lightest
+          td.px-md.py-sm.bb.bc-gray-lighter= card.membership_id
           td.px-md.py-sm.bb.bc-gray-lighter= card.name
           td.px-md.py-sm.bb.bc-gray-lighter= parseInt(card.number, 10)

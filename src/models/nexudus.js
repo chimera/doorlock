@@ -41,8 +41,66 @@ module.exports = class Nexudus {
     }
   }
 
-  static cards() {
+  static doCheckin(membership_id) {
     this.validateHash() 
+
+    this.username = NEXUDUS_APP_KEY;
+    this.password = crypto.createHash('md5').update(NEXUDUS_USER_TOKEN+NEXUDUS_APP_SECRET).digest('hex');
+    this.token = Buffer.from(this.username+":"+this.password).toString('base64');
+
+    return new Promise((resolve, reject) => {
+      // TODO move to axios
+      const req = https.request(
+        {
+          headers: {
+            Authorization: `Basic ${this.token}`,
+          },
+          hostname: 'spaces.nexudus.com',
+          method: 'GET',
+          path: '/api/FIXME',
+        },
+        res => {
+          const { statusCode, headers } = res
+          res.setEncoding('utf8')
+
+          let coworkers = ''
+          res.on('data', chunk => {
+            coworkers += chunk
+          })
+
+          res.on('end', () => {
+            console.log('\n----------------------------------------------------')
+            console.log('NEXUDUS CARDS RESPONSE: '+coworkers)
+            console.log(JSON.stringify({ statusCode, headers }, null, 2))
+            coworkers = JSON.parse(coworkers)
+            console.log(JSON.stringify(coworkers.Records, null, 2))
+            if (!coworkers || !coworkers.Records || !coworkers.Records.length) {
+              throw new Error('No coworkers received from API!')
+            }
+            resolve(
+              coworkers.Records.map(coworker => ({
+                name: coworker.FullName,
+                number: coworker.AccessCardId,
+              }))
+            )
+            console.log(
+              '----------------------------------------------------\n'
+            )
+          })
+        }
+      )
+      req.on('data', console.log)
+      req.on('error', e => {
+        console.error(e)
+        reject(e)
+      })
+      req.end()
+      console.log(req)
+    })
+  }
+
+  static cards() {
+    this.validateHash()
 
     this.username = NEXUDUS_APP_KEY;
     this.password = crypto.createHash('md5').update(NEXUDUS_USER_TOKEN+NEXUDUS_APP_SECRET).digest('hex');

@@ -31,7 +31,7 @@ $(function(){
                         console.log(data);
                         if (data.hasOwnProperty("success")) {
                             if (data.success) {
-                                success(data.name);
+                                success(data.data);
                                 window.relayActivated = true;
                             } else {
                                 failure();
@@ -71,10 +71,11 @@ function reset(){
     loading(false);
 }
 
-function success(name){
+function success(data){
     reset();
     setTimeout(function(){
-        $("#name").text(name);
+        $("#name").text(data.name);
+        $("#remaining").text(data.remaining);
         $("#success").removeClass("dn");
         setTimeout(function(){
             reset();
