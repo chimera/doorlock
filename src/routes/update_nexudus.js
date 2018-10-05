@@ -2,9 +2,8 @@ const Nexudus = require('../models/nexudus')
 
 module.exports = (req, res) => {
   Nexudus.getCards()
-    .then(cards => {
-      console.log('GOT CARDS:', cards)
-      res.redirect('/')
+    .then( () => {
+      res.redirect('/cards')
     })
     .catch(console.error)
 }

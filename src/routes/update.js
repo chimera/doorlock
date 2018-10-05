@@ -2,9 +2,8 @@ const Cobot = require('../models/cobot')
 
 module.exports = (req, res) => {
   Cobot.getCards()
-    .then(cards => {
-      console.log('GOT CARDS:', cards)
-      res.redirect('/')
+    .then( () => {
+      res.redirect('/cards')
     })
     .catch(console.error)
 }

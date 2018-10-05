@@ -4,28 +4,17 @@ const axios = require('axios')
 const crypto = require('crypto');
 
 const {
-//  CARD_UPDATE_INTERVAL,
+  CARD_UPDATE_INTERVAL,
   NEXUDUS_APP_KEY,
   NEXUDUS_USER_TOKEN,
   NEXUDUS_USER_TOKEN_DATE,
   NEXUDUS_USER_TOKEN_HASH,
   NEXUDUS_APP_SECRET
 } = require('../../constants')
-const {
-  CARD_UPDATE_INTERVAL,
-  COBOT_CARDS_API,
-  COBOT_CLIENT_ID,
-  COBOT_CLIENT_SECRET,
-  COBOT_SCOPE,
-  COBOT_USER_EMAIL,
-  COBOT_USER_PASSWORD,
-} = require('../../constants')
-
 
 module.exports = class Nexudus {
   constructor() {
   }
-
 
   static validateHash() {
     if (!NEXUDUS_APP_KEY)
@@ -43,53 +32,55 @@ module.exports = class Nexudus {
     var param = [NEXUDUS_USER_TOKEN, NEXUDUS_APP_KEY, NEXUDUS_USER_TOKEN_DATE]
     param.sort(); // sort alphabetically
     var calc = (param.join("|") + NEXUDUS_APP_SECRET)
-    var hmac = crypto.createHash('md5').update(calc)
-    var calculatedHash = hmac.digest('hex')
+    var calculatedHash = crypto.createHash('md5').update(calc).digest('hex')
 
     //Check if the request is valid
-    var valid = (calculatedHash == NEXUDUS_USER_TOKEN); 
-    if (valid) {
-      throw new Error('Good token.')
-    } else {
-      throw new Error('the NEXUDUS_USER_TOKEN, NEXUDUS_APP_KEY, or NEXUDUS_USER_TOKEN_DATE env variables failed validation. Ensure that you are getting these values from the Nexudus app installation process and copy-pasting them properly. Pre-hash: '+calc+' Hash: '+calculatedHash+' Should be: '+NEXUDUS_USER_TOKEN_HASH)
+    var valid = (calculatedHash == NEXUDUS_USER_TOKEN_HASH);
+    if (!valid) {
+      throw new Error('the NEXUDUS_USER_TOKEN, NEXUDUS_APP_KEY, or NEXUDUS_USER_TOKEN_DATE env variables failed validation. Ensure that you are getting these values from the Nexudus app installation process and copy-pasting them properly. Hash: '+calculatedHash+' Should be: '+NEXUDUS_USER_TOKEN_HASH)
     }
   }
 
-  cards() {
+  static cards() {
     this.validateHash() 
+
+    this.username = NEXUDUS_APP_KEY;
+    this.password = crypto.createHash('md5').update(NEXUDUS_USER_TOKEN+NEXUDUS_APP_SECRET).digest('hex');
+    this.token = Buffer.from(this.username+":"+this.password).toString('base64');
+
     return new Promise((resolve, reject) => {
       // TODO move to axios
       const req = https.request(
         {
           headers: {
-            Authorization: `Bearer ${this.token}`,
+            Authorization: `Basic ${this.token}`,
           },
-          hostname: 'chimera.cobot.me',
+          hostname: 'spaces.nexudus.com',
           method: 'GET',
-          path: '/api/check_in_tokens',
+          path: '/api/spaces/coworkers',
         },
         res => {
           const { statusCode, headers } = res
-          console.log('\n----------------------------------------------------')
-          console.log('COBOT CARDS RESPONSE:')
-          console.log(JSON.stringify({ statusCode, headers }, null, 2))
           res.setEncoding('utf8')
 
-          let cards = ''
+          let coworkers = ''
           res.on('data', chunk => {
-            cards += chunk
+            coworkers += chunk
           })
 
           res.on('end', () => {
-            cards = JSON.parse(cards)
-            console.log(JSON.stringify(cards, null, 2))
-            if (!cards || !cards.length) {
-              throw new Error('No cards received from API!')
+            console.log('\n----------------------------------------------------')
+            console.log('NEXUDUS CARDS RESPONSE: '+coworkers)
+            console.log(JSON.stringify({ statusCode, headers }, null, 2))
+            coworkers = JSON.parse(coworkers)
+            console.log(JSON.stringify(coworkers.Records, null, 2))
+            if (!coworkers || !coworkers.Records || !coworkers.Records.length) {
+              throw new Error('No coworkers received from API!')
             }
             resolve(
-              cards.map(card => ({
-                name: card.membership.name,
-                number: card.token,
+              coworkers.Records.map(coworker => ({
+                name: coworker.FullName,
+                number: coworker.AccessCardId,
               }))
             )
             console.log(
@@ -104,90 +95,13 @@ module.exports = class Nexudus {
         reject(e)
       })
       req.end()
+      console.log(req)
     })
-    // return axios
-    //   .get(COBOT_CARDS_API, {
-    //     headers: {
-    //       Authorization: `Bearer ${this.token}`,
-    //     },
-    //   })
-    //   .then(resp =>
-    //     resp.data.map(card => ({
-    //       name: card.membership.name,
-    //       number: card.token,
-    //     }))
-    //   )
-  }
-
-  static authorize() {
-    this.validateHash() 
-    console.log('Authorizing Cobot application...')
-    if (!COBOT_SCOPE) throw new Error('missing "COBOT_SCOPE" env variable!')
-    if (!COBOT_USER_EMAIL)
-      throw new Error('missing "COBOT_USER_EMAIL" env variable!')
-    if (!COBOT_USER_PASSWORD)
-      throw new Error('missing "COBOT_USER_PASSWORD" env variable!')
-    if (!COBOT_CLIENT_ID)
-      throw new Error('missing "COBOT_CLIENT_ID" env variable!')
-    if (!COBOT_CLIENT_SECRET)
-      throw new Error('missing "COBOT_CLIENT_SECRET" env variable!')
-
-    const qs = [
-      `scope=${COBOT_SCOPE}`,
-      `grant_type=password`,
-      `username=${COBOT_USER_EMAIL}`,
-      `password=${encodeURI(COBOT_USER_PASSWORD)}`,
-      `client_id=${COBOT_CLIENT_ID}`,
-      `client_secret=${COBOT_CLIENT_SECRET}`,
-    ].join('&')
-
-    return new Promise((resolve, reject) => {
-      const req = https.request(
-        {
-          hostname: 'www.cobot.me',
-          method: 'POST',
-          path: `/oauth/access_token?${qs}`,
-        },
-        res => {
-          const { statusCode, headers } = res
-          console.log('\n----------------------------------------------------')
-          console.log('COBOT AUTHORIZATION RESPONSE:')
-          console.log(JSON.stringify({ statusCode, headers }, null, 2))
-
-          res.setEncoding('utf8')
-
-          let cobot
-          res.on('data', chunk => {
-            const body = JSON.parse(chunk)
-            console.log(JSON.stringify({ body }, null, 2))
-            const token = body.access_token
-            if (token) {
-                cobot = new Cobot(token)
-            } else {
-                console.error(`Expected access token, got: ${body}`)
-            }
-          })
-
-          res.on('end', () => {
-            resolve(cobot)
-            console.log(
-              '----------------------------------------------------\n'
-            )
-          })
-        }
-      )
-      req.on('error', e => reject(e))
-      req.end()
-    })
-    // return axios
-    //   .post(`https://www.cobot.me/oauth/access_token?${qs}`)
-    //   .then(resp => new Cobot(resp.data.access_token))
   }
 
   static getCards() {
     console.log('Updating cards...')
-    return this.authorize()
-      .then(cobot => cobot.cards())
+    return this.cards()
       .then(cards => Cards.write(cards))
     // .then(() => {
     //   console.log(
