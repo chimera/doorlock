@@ -18,7 +18,7 @@ module.exports = (req, res) => {
 
     Door.open()
       .then(door => {
-        data = {"name": card.name, "remaining": checkin.valid_until}
+        data = {"name": card.name} //, "remaining": checkin.valid_until}
         reponse(req,res,`/success?name=${card.name}`,true,data)
       }).catch(err => {
         logger.logError(card, err)

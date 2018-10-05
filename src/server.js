@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000
 // Time out after 10 secs
 // app.use(timeout('10s'))
 app.use(function(req, res, next){
-  req.setTimeout(1) // 1sec timeout
+  req.setTimeout(20000) // 20sec timeout
   next()
 })
 
