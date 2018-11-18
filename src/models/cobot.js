@@ -1,3 +1,4 @@
+const axios = require('axios')
 const Cards = require('./cards')
 const https = require('https')
 const {
@@ -16,77 +17,27 @@ module.exports = class Cobot {
   }
 
   checkin(membership_id) {
-    if (!COBOT_CARDS_API)
-      throw new Error('missing "COBOT_CARDS_API" env variable!')
-    return new Promise((resolve, reject) => {
-      // TODO move to axios
-      const req = https.request(
-        {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-          hostname: 'chimera.cobot.me',
-          method: 'POST',
-          path: `/api/memberships/${membership_id}/work_sessions`,
-          secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
-          ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
-          honorCipherOrder: true
-        },
-        res => {
-          const { statusCode, headers } = res
-          console.log('\n----------------------------------------------------')
-          console.log('COBOT CHECKIN RESPONSE:')
-          console.log(JSON.stringify({ statusCode, headers }, null, 2))
-          res.setEncoding('utf8')
-
-          let output = ''
-          res.on('data', chunk => {
-            output += chunk
-          })
-
-          res.on('end', () => {
-            console.log(output)
-            output = JSON.parse(output)
-            console.log(JSON.stringify(output, null, 2))
-
-            if (output && output.base) {
-              return reject(output.base[0])
-            }
-            if (!output || !output.membership) {
-              return reject('No output received from API!')
-            }
-            resolve(
-              {
-                membership_id: output.membership.id,
-                name: output.membership.name,
-                valid_until: output.valid_until,
-              }
-            )
-            console.log(
-              '----------------------------------------------------\n'
-            )
-          })
+    if (!COBOT_CARDS_API) throw new Error('missing "COBOT_CARDS_API" env variable!')
+    
+    const config = {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      }
+    }
+    
+    return axios
+      .post(`https://chimera.cobot.me/api/memberships/${membership_id}/work_sessions`, config)
+      .then(resp => {
+        console.log('RESPONSE:', resp.data)
+        const { membership } = resp.data
+        if (!membership) throw new Error('No membership received')
+        return {
+          membership_id: membership.id,
+          name: membership.name,
+          valid_until: resp.data.valid_until,
         }
-      )
-      req.on('data', console.log)
-      req.on('error', e => {
-        console.error(e)
-        reject(e)
       })
-      req.end()
     })
-    // return axios
-    //   .get(COBOT_CARDS_API, {
-    //     headers: {
-    //       Authorization: `Bearer ${this.token}`,
-    //     },
-    //   })
-    //   .then(resp =>
-    //     resp.data.map(card => ({
-    //       name: card.membership.name,
-    //       number: card.token,
-    //     }))
-    //   )
   }
 
 
