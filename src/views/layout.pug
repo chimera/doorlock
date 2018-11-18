@@ -13,13 +13,14 @@ html(lang='en')
     script(src='/client.js')
 
   body.p-none.m-none.ff-sans-serif
-    header.df.p-md.gray.bb.bc-gray-lighter
-      h1.txt-md.fw-1.ls-lg.upper
-        a(href='/').gray-light Chimera Doorlock
+    header.df.p-md.gray.bc-primary
+      h1.upper
+        a(href='/')
+          img(src="/logo.jpg").logo
       .ml-auto
-        a.ml-md(href='/') Scan
-        a.ml-md(href='/cards') Cards
-        a.ml-md(href='/logs') Logs
+        a.black.txt-md.ml-md(href='/') Scan
+        a.black.txt-md.ml-md(href='/cards') Cards
+        a.black.txt-md.ml-md(href='/logs') Logs
 
     section.mx-auto.my-md.p-md(style='max-width: 900px;')
       block content

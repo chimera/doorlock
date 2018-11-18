@@ -19,7 +19,7 @@
   box-sizing: border-box;
 }
 body {
-  font-size: 16px;
+  font-size: 24px;
 }
 a {
   color: var(--color-primary);
@@ -100,9 +100,10 @@ p {
 -   Page heading
 ------------------------------------------------------*/
 
-.page-heading {
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-lg);
-  font-size: var(--font-size-xl);
-  font-weight: 100;
+header {
+  border-top: 8px solid #00a5b8;
+}
+
+.logo {
+  height: 4em;
 }
