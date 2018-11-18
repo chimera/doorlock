@@ -3,45 +3,49 @@ const Door = require('../models/door')
 const logger = require('../models/logger')
 const Cobot = require('../models/cobot')
 
-module.exports = (req, res) => {
-  const rfid = req.body.rfid.trim().toLowerCase()
-  console.log('SCANNED CARD:', rfid)
+module.exports = async (req, res) => {
+  try {
+    // Cleanup the RFID value so it is consistent.
+    const number = req.body.rfid.trim().toLowerCase()
+    console.log('SCANNED CARD:', number)
 
-  Cards.validate(rfid).then(card => {
+    // Validate that the card exists in our local database
+    // of member cards.
+    const card = await Cards.validate(number)
     console.log('CARD:', card)
+
+    // If the card doesn't exist, the RFID is considered inactive or
+    // invalid, so we let them know via the failure page.
     if (!card) {
-      logger.logRejectedCard({number: rfid})
-      return reponse(req,res,'/failure',false)
+      logger.logRejectedCard({ number })      
+      res.format({
+        json: () => res.json({ success: false, path: '/failure', { number } }),
+        default: () => res.redirect('/failure')
+      })
+      return
     }
 
     logger.logGrantedCard(card)
 
-    Door.open()
-      .then(door => {
-        data = {"name": card.name} //, "remaining": checkin.valid_until}
-        reponse(req,res,`/success?name=${card.name}`,true,data)
-      }).catch(err => {
-        logger.logError(card, err)
-        res.status(500).send("Error: "+err).end()
-      })
+    // Open the door assuming they are authenticated.
+    const door = await Door.open()
 
-    Cobot.doCheckin(card)
-      .catch(err => {
-        logger.logError({number: rfid}, err)
-        // reponse(req,res,`/failure`,false,err)
-      })
-      // .then(checkin => {
-      // })
-  }).catch(err => {
-    logger.logError({number: rfid}, err)
-    res.status(500).send("Error: "+err).end()
-  })
-}
+    // Return a response before reporting checkin to Cobot
+    // so the door opens quickly.
+    const path = `/success?name=${card.name}`
+    res.format({
+      json: () => res.json({ success: true, path, { name: card.name } }),
+      default: () => res.redirect(path)
+    });
 
-function reponse(req,res,path,success,data) {
-  if(/application\/json/.test(req.get('accept'))) {
-    res.json({"success":success, "path":path, "data": data}).end()
-  } else {
-    res.redirect(path).end()
+    // Check the user into Cobot
+    await Cobot.doCheckin(card)
+  
+  } catch (error) {
+    logger.logError({ number }, error)
+    res.format({
+      json: () => res.json({ success: false, path: '/failure', { number } }),
+      default: () => res.send(`ERROR: ${error}`)
+    });
   }
 }
