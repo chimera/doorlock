@@ -78,7 +78,7 @@ function success(data){
     reset();
     setTimeout(function(){
         $("#name").text(data.name);
-        $("#remaining").text(data.remaining);
+        $("#remaining").text(data.remaining == undefined ? "" : data.remaining);
         $("#success").removeClass("dn");
         setTimeout(function(){
             reset();

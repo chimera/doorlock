@@ -11,12 +11,15 @@ module.exports = class Door {
       setTimeout(() => {
         console.log('CLOSING DOOR!')
         board.allOff()
-        success()
       }, DELAY)
     })
   }
 
-  // static close() {
-  //   console.log('CLOSE DOOR!!!!!!!!!!!!')
-  // }
+  static close() {
+    return new Promise(success => {
+      console.log('CLOSING DOOR!')
+      const board = new Board(2)
+      success(board.allOff())
+    })
+  }
 }

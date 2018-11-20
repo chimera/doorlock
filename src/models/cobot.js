@@ -4,11 +4,8 @@ const https = require('https')
 const {
   CARD_UPDATE_INTERVAL,
   COBOT_CARDS_API,
-  COBOT_CLIENT_ID,
-  COBOT_CLIENT_SECRET,
+  COBOT_ACCESS_TOKEN,
   COBOT_SCOPE,
-  COBOT_USER_EMAIL,
-  COBOT_USER_PASSWORD,
 } = require('../../constants')
 
 module.exports = class Cobot {
@@ -18,15 +15,18 @@ module.exports = class Cobot {
 
   checkin(membership_id) {
     if (!COBOT_CARDS_API) throw new Error('missing "COBOT_CARDS_API" env variable!')
-    
+
     const config = {
       headers: {
         Authorization: `Bearer ${this.token}`,
-      }
+      },
+      secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
+      ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+      honorCipherOrder: true
     }
-    
+
     return axios
-      .post(`https://chimera.cobot.me/api/memberships/${membership_id}/work_sessions`, config)
+      .post(`https://chimera.cobot.me/api/memberships/${membership_id}/work_sessions`, null, config)
       .then(resp => {
         console.log('RESPONSE:', resp.data)
         const { membership } = resp.data
@@ -37,9 +37,37 @@ module.exports = class Cobot {
           valid_until: resp.data.valid_until,
         }
       })
-    })
+      .catch(err => {
+        console.error(err.response.data)
+        throw new Error(err.response.data.base)
+      })
   }
 
+  checktimepasses(membership_id) {
+    if (!COBOT_CARDS_API) throw new Error('missing "COBOT_CARDS_API" env variable!')
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+      secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
+      ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+      honorCipherOrder: true
+    }
+
+    return axios
+      .get(`https://chimera.cobot.me/api/memberships/${membership_id}/time_passes/unused`, config)
+      .then(resp => {
+        console.log('RESPONSE:', resp.data)
+        return {
+          unused_count: resp.data.length
+        }
+      })
+      .catch(err => {
+        console.error(err.response.data)
+        throw new Error(err.response.data.base)
+      })
+  }
 
   cards() {
     if (!COBOT_CARDS_API)
@@ -104,107 +132,17 @@ module.exports = class Cobot {
       })
       req.end()
     })
-    // return axios
-    //   .get(COBOT_CARDS_API, {
-    //     headers: {
-    //       Authorization: `Bearer ${this.token}`,
-    //     },
-    //   })
-    //   .then(resp =>
-    //     resp.data.map(card => ({
-    //       name: card.membership.name,
-    //       number: card.token,
-    //     }))
-    //   )
   }
 
-  static authorize() {
-    console.log('Authorizing Cobot application...')
-    if (!COBOT_SCOPE) throw new Error('missing "COBOT_SCOPE" env variable!')
-    if (!COBOT_USER_EMAIL)
-      throw new Error('missing "COBOT_USER_EMAIL" env variable!')
-    if (!COBOT_USER_PASSWORD)
-      throw new Error('missing "COBOT_USER_PASSWORD" env variable!')
-    if (!COBOT_CLIENT_ID)
-      throw new Error('missing "COBOT_CLIENT_ID" env variable!')
-    if (!COBOT_CLIENT_SECRET)
-      throw new Error('missing "COBOT_CLIENT_SECRET" env variable!')
-
-    const qs = [
-      `scope=${COBOT_SCOPE}`,
-      `grant_type=password`,
-      `username=${COBOT_USER_EMAIL}`,
-      `password=${encodeURI(COBOT_USER_PASSWORD)}`,
-      `client_id=${COBOT_CLIENT_ID}`,
-      `client_secret=${COBOT_CLIENT_SECRET}`,
-    ].join('&')
-
-    return new Promise((resolve, reject) => {
-      const req = https.request(
-        {
-          hostname: 'www.cobot.me',
-          method: 'POST',
-          path: `/oauth/access_token?${qs}`,
-          secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
-          ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
-          honorCipherOrder: true
-        },
-        res => {
-          const { statusCode, headers } = res
-          console.log('\n----------------------------------------------------')
-          console.log('COBOT AUTHORIZATION RESPONSE:')
-          console.log(JSON.stringify({ statusCode, headers }, null, 2))
-
-          res.setEncoding('utf8')
-
-          let cobot
-          res.on('data', chunk => {
-            const body = JSON.parse(chunk)
-            console.log(JSON.stringify({ body }, null, 2))
-            const token = body.access_token
-            if (token) {
-                cobot = new Cobot(token)
-            } else {
-                console.error(`Expected access token, got: ${body}`)
-            }
-          })
-
-          res.on('end', () => {
-            resolve(cobot)
-            console.log(
-              '----------------------------------------------------\n'
-            )
-          })
-        }
-      )
-
-      req.on('socket', function (socket) {
-          socket.setTimeout(9000);
-          socket.on('timeout', function() {
-              req.abort();
-          });
-      });
-
-      req.on('error', e => reject(e))
-      req.end()
-    })
-    // return axios
-    //   .post(`https://www.cobot.me/oauth/access_token?${qs}`)
-    //   .then(resp => new Cobot(resp.data.access_token))
-  }
 
   static doCheckin(card) {
     console.log('Checking in ', card)
-    return this.authorize()
-      .then(cobot => cobot.checkin(card.membership_id))
-    // .then(() => {
-    //   console.log(
-    //     'Updating card list in',
-    //     CARD_UPDATE_INTERVAL / 1000,
-    //     'seconds...'
-    //   )
-    //   setTimeout(this.getCards.bind(this), CARD_UPDATE_INTERVAL)
-    // })
+    return (new Cobot(COBOT_ACCESS_TOKEN)).checkin(card.membership_id)
+  }
+
+  static doCheckTimepasses(card) {
+    console.log('Checking time passes for ', card)
+    return (new Cobot(COBOT_ACCESS_TOKEN)).checktimepasses(card.membership_id)
   }
 
   static getCards() {

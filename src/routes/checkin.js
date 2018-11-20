@@ -16,25 +16,43 @@ module.exports = (req, res) => {
 
     logger.logGrantedCard(card)
 
-    Door.open()
-      .then(door => {
-        data = {"name": card.name} //, "remaining": checkin.valid_until}
-        reponse(req,res,`/success?name=${card.name}`,true,data)
-      }).catch(err => {
-        logger.logError(card, err)
-        res.status(500).send("Error: "+err).end()
-      })
-
     Cobot.doCheckin(card)
+      .then(checkin => {
+        Cobot.doCheckTimepasses(card)
+          .then(time_passes => {
+            // if we got here, 0 time passes is not a problem
+            // because of an unlimited plan. therefore, output
+            // nothing for the count. ("you have passes remaining")
+            if (time_passes.unused_count === 0) {
+              remaining = undefined;
+            } else {
+              remaining = time_passes.unused_count;
+            }
+            data = {"name": checkin.name, "remaining": remaining}
+            console.log(data)
+            reponse(req,res,`/success?name=${checkin.name}`,true,data)
+          })
+          .catch(err => {
+            logger.logError({number: rfid}, err)
+            res.status(500).send(""+err).end()
+          })
+      })
       .catch(err => {
         logger.logError({number: rfid}, err)
-        // reponse(req,res,`/failure`,false,err)
+        res.status(500).send(""+err).end()
       })
-      // .then(checkin => {
-      // })
+      .finally( () => {
+        Door.open().catch(err => {
+          logger.logError({number: rfid}, err)
+          Door.close().catch(err => {
+            logger.logError({number: rfid}, err)
+          })
+        })
+      })
+
   }).catch(err => {
     logger.logError({number: rfid}, err)
-    res.status(500).send("Error: "+err).end()
+    res.status(500).send(""+err).end()
   })
 }
 

@@ -15,6 +15,12 @@
 -   [ ] Handle card reading directly in hardware, no ability to manually type into the webform
 -   [ ] Log error messages and other app issues remotely
 
+## Setting up Cobot
+
+- Register a new application at https://www.cobot.me/oauth2_clients
+- Set the Scope to `checkin_tokens write write_check_ins read read_time_passes`
+- Paste the Access Token (used for dev / non-interactive purposes) into the COBOT_ACCESS_TOKEN variable in `.env` (based on `.env.example` -- see below instructions)
+
 ## Configuring Raspberry Pi
 
 On the RPI:
