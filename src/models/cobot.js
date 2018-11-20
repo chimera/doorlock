@@ -147,8 +147,7 @@ module.exports = class Cobot {
 
   static getCards() {
     console.log('Updating cards...')
-    return this.authorize()
-      .then(cobot => cobot.cards())
+    return (new Cobot(COBOT_ACCESS_TOKEN)).cards()
       .then(cards => Cards.write(cards))
     // .then(() => {
     //   console.log(
