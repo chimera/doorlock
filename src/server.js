@@ -62,7 +62,6 @@ try {
 // Routes
 //---------------------------------------------------------
 
-app.post('/calendar', require('./routes/calendar'))
 app.post('/checkin', require('./routes/checkin'))
 app.get('/success', require('./routes/success'))
 app.get('/failure', require('./routes/failure'))
