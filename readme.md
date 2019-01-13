@@ -8,20 +8,25 @@
 
 ## TODO
 
--   [ ] Update list of cards every few minutes from Cobot
--   [ ] Push up logs/checkins to management app
+-   [x] Update list of cards every few minutes from Cobot
+-   [x] Push up logs/checkins to management app
 -   [ ] Get working with Nexedus
 -   [ ] Protect card and log pages such that people can't just login to the wifi and copy-paste card ID numbers into the form
 -   [ ] Handle card reading directly in hardware, no ability to manually type into the webform
 -   [ ] Log error messages and other app issues remotely
 
-## Setting up Cobot
+# Setting up Cobot
 
 - Register a new application at https://www.cobot.me/oauth2_clients
 - Set the Scope to `checkin_tokens write write_check_ins read read_time_passes`
 - Paste the Access Token (used for dev / non-interactive purposes) into the COBOT_ACCESS_TOKEN variable in `.env` (based on `.env.example` -- see below instructions)
 
-## Configuring Raspberry Pi
+# Developing
+
+- Install dependencies with `npm install`
+- Run `node src/server.js`
+
+# Configuring Raspberry Pi
 
 On the RPI:
 
@@ -63,7 +68,7 @@ npm install node-hid --build-from-source
 
 You should now be able to view the app at http://localhost:3000
 
-# Autostart
+## Autostart
 
 On a RasPi, copy the contents of the autostart file into: `~/.config/lxsession/LXDE-pi/autostart` (presuming you've downloaded this repo to `/home/pi/doorlock`)
 

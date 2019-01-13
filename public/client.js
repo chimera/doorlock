@@ -115,3 +115,15 @@ function error(msg){
         setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
     }, 250);
 }
+
+function renderOverlay(show=true){
+    if (show) {
+        $("#overlay").show();
+    } else {
+        $("#overlay").hide();
+    }
+}
+
+function updateOverlay(){
+    $("#overlay-body").html('<p>hi</p>');
+}

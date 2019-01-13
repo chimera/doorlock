@@ -4,6 +4,11 @@ block title
   | Scan Card
 
 block content
+  div#overlay(style="background: black;width: 100%;height: 100%;position: absolute;opacity: .75;color: white;top: 0;left: 0;padding: 2em;display:none;")
+    h2
+      | Meetup.com
+    div#overlay-body
+
   h1.page-heading Scan Your Card
   form(action='/checkin' method='post')
     input#rfid.input.input-block(name="rfid" autofocus)
