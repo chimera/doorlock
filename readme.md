@@ -28,6 +28,8 @@
 
 # Configuring Raspberry Pi
 
+First, get a working RasPi. I suggest Raspbian (not NOOBS). Download and extract the ZIP. Then follow standard instructions to "burn" image to SD card. On Linux/Mac, that'd be something like: (**TRIPLE CHECK THE IF AND OF HERE BEFORE COPY PASTING, ESPECIALLY OF=/dev/sdb BECAUSE ALL CONTENTS WILL BE INSTANTLY OVERWRITTEN DESTRUCTIVELY**) `sudo dd if=2018-11-13-raspbian-stretch-full.img of=/dev/sdb bs=1M`
+
 On the RPI:
 
 ```bash
@@ -93,7 +95,7 @@ Using this in your own project? Let us know by creating an issue in Github!
 
 ## Credits
 
-Developed by [Dana Woodman][dana] &copy; 2018.
+Developed by [Dana Woodman][dana] &copy; 2018. Modified by [Will Bradley][zyphlar] 2019.
 
 ## License
 
@@ -104,3 +106,4 @@ MIT
 [jest]: https://facebook.github.io/jest
 [latch]: https://www.amazon.com/gp/product/B00V45GWTI
 [relay]: http://a.co/d/hbuockB
+[zyphlar]: https://github.com/zyphlar
