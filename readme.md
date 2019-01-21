@@ -72,7 +72,7 @@ You should now be able to view the app at http://localhost:3000
 
 ## Autostart
 
-On a RasPi, copy the contents of the autostart file into: `~/.config/lxsession/LXDE-pi/autostart` (presuming you've downloaded this repo to `/home/pi/doorlock`)
+On a RasPi, copy the contents of the autostart file into: `~/.config/lxsession/LXDE-pi/autostart` (presuming you've downloaded this repo to `/home/pi/doorlock`. Note that autostart is the filename, not a folder. Messing this up will prevent you from logging in fully.)
 
 Also, add the full `cron.sh` path to `/etc/crontab` to run every 5 minutes, i.e. `*/5 *   * * *   root    /home/pi/doorlock/cron.sh`
 
