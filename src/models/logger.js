@@ -13,9 +13,27 @@ var winston = winston.createLogger({
 winston.logError = function(card, message) {
   winston.log({
     level: 'error',
-    message: message,
+    message: message.toString(),
     timestamp: new Date().getTime(),
     card: card,
+  })
+}
+
+winston.logValidCard = function(card) {
+  winston.log({
+    level: 'info',
+    message: 'valid',
+    timestamp: new Date().getTime(),
+    card: card
+  })
+}
+
+winston.logInvalidCard = function(card) {
+  winston.log({
+    level: 'info',
+    message: 'invalid',
+    timestamp: new Date().getTime(),
+    card: card
   })
 }
 
@@ -28,10 +46,10 @@ winston.logGrantedCard = function(card) {
   })
 }
 
-winston.logRejectedCard = function(card) {
+winston.logDeniedCard = function(card) {
   winston.log({
     level: 'info',
-    message: 'rejected',
+    message: 'denied',
     timestamp: new Date().getTime(),
     card: card
   })

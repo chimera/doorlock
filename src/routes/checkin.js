@@ -13,48 +13,44 @@ module.exports = (req, res) => {
   Cards.validate(rfid).then(card => {
     console.log('CARD:', card)
     if (!card) {
-      logger.logRejectedCard({number: rfid})
-      return response(req,res,'/failure',false,{"number": rfid})
+      logger.logInvalidCard({number: rfid})
+      return response(req,res,'/failure',false,"Card was not recognized as valid.")
     }
 
-    logger.logGrantedCard(card)
+    logger.logValidCard(card)
 
-    Cobot.doCheckin(card)
-      .then(checkin => {
-        Cobot.doCheckTimepasses(card)
-          .then(time_passes => {
-            // if we got here, 0 time passes is not a problem
-            // because of an unlimited plan. therefore, output
-            // nothing for the count. ("you have passes remaining")
-            if (time_passes.unused_count === 0) {
-              remaining = undefined;
-            } else {
-              remaining = time_passes.unused_count;
-            }
-            data = {"name": checkin.name, "remaining": remaining, "checkin":checkin, "time_passes": time_passes}
-            console.log(data)
-            response(req,res,`/success?name=${checkin.name}`,true,data)
-          })
-          .catch(err => {
-            logger.logError({number: rfid}, err)
-            response(req,res,null,false,""+err,500)
-          })
+    Cobot.doCheckin(card).then(checkin => {
+      Cobot.doCheckTimepasses(card).then(time_passes => {
+        // TODO: figure out how to differentiate between "0 passes remaining" and "your plan doesn't support time passes"
+        // if (time_passes.unused_count === 0) {
+        //   remaining = undefined;
+
+        remaining = time_passes.unused_count;
+        data = {"name": checkin.name, "remaining": remaining, "checkin":checkin, "time_passes": time_passes}
+        console.log(data)
+        response(req,res,`/success?name=${checkin.name}`,true,data)
       })
       .catch(err => {
         logger.logError({number: rfid}, err)
-        response(req,res,null,false,""+err,500)
+        response(req,res,null,false,err.toString(),500)
       })
-      .finally( () => {
-        Door.open().catch(err => {
+
+      logger.logGrantedCard(card)
+
+      Door.open().catch(err => {
+        logger.logError({number: rfid}, err)
+        Door.close().catch(err => {
           logger.logError({number: rfid}, err)
-          Door.close().catch(err => {
-            logger.logError({number: rfid}, err)
-          })
         })
       })
+    })
+    .catch(err => {
+      logger.logError(card, err)
+      response(req,res,null,false,err.toString(),500)
+    })
   }).catch(err => {
     logger.logError({number: rfid}, err)
-    response(req,res,null,false,""+err,500)
+    response(req,res,null,false,err.toString(),500)
   })
 }
 
