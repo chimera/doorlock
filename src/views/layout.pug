@@ -14,12 +14,12 @@ html(lang='en')
 
   body.p-none.m-none.ff-sans-serif
     header.df.p-md.gray.bb.bc-gray-lighter
-      h1.txt-md.fw-1.ls-lg.upper
-        a(href='/').gray-light Chimera Doorlock
+      h1.fw-1.ls-lg.upper
+        a(href='/').gray-light Doorlock
       .ml-auto
-        a.ml-md(href='/') Scan
-        a.ml-md(href='/cards') Cards
-        a.ml-md(href='/logs') Logs
+        a.button.ml-md(href='/') Scan
+        a.button.ml-md(href='/cards') Cards
+        a.button.ml-md(href='/logs') Logs
 
-    section.mx-auto.my-md.p-md(style='max-width: 900px;')
+    section.mx-auto.my-md.p-md
       block content
