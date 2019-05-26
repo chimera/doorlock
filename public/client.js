@@ -1,3 +1,6 @@
+// by default don't show socket.io status popups
+window.statusspy = false;
+
 $(function(){
     // refocus and clear the input box and relay every 20sec for failsafe
     setInterval(function(){
@@ -5,6 +8,19 @@ $(function(){
         $("#rfid").val(null);
         window.relayActivated = false;
     }, 20000);
+
+    $("#statusspybutton").click(function(event){
+        // toggle
+        window.statusspy = !window.statusspy;
+        if (window.statusspy) {
+            initSocketio(); // only load socketio if requested
+            $(this).addClass("bg-success");
+            $("#statusspyview").removeClass("dn");
+        } else {
+            $(this).removeClass("bg-success");
+            $("#statusspyview").addClass("dn");
+        }
+    });
 
     $("#rfid").keydown(function(event){
         // prevent enter key from submitting form; we want AJAX if possible
@@ -114,4 +130,97 @@ function error(msg){
         }
         setTimeout(function(){ reset(); }, 6000); // 6000 to match door.js(const DELAY)
     }, 250);
+}
+
+function initSocketio() {
+    var socket = io();
+    socket.on('checkin', function(msg){
+        if (window.statusspy) {
+            console.log(msg);
+
+            now = new Date(); // now
+
+            name = "n/a";
+            number = "n/a";
+            status = msg.data;
+            style = "";
+            icon = "";
+
+            if (msg.hasOwnProperty('success')) {
+                if (msg.success) {
+                    style = "bg-success";
+                    icon = "<i class='fas fa-thumbs-up'></i>";
+                    status = "You have "+msg.data.remaining+" checkins remaining."
+                } else {
+                    style = "bg-danger";
+                    icon = "<i class='fas fa-hand-paper'></i>";
+                }
+            }
+
+            if (msg.card) {
+                if (msg.card.name) {
+                    name = msg.card.name;
+                }
+                if (msg.card.number) {
+                    // censor it
+                    number = "****"+msg.card.number.toString().slice(-3);
+                }
+            }
+
+            // non-card failures are yellow
+            if (
+                style == "bg-danger" &&
+                msg.card && msg.card.name
+            ) {
+                style = "bg-warning-light";
+                icon = "<i class='fas fa-exclamation-triangle'></i>";
+            }
+
+            // highlight header
+            $(".page-heading").css("animation-play-state","running");
+
+            $("#statusspylog tbody").prepend(
+                "<tr class='"+style+"'>"+
+                "<td class='date px-md py-sm' alt='"+now.toLocaleTimeString()+"' data-date='"+now.toISOString()+"'>Now</td>"+
+                "<td class='px-md py-sm'>"+name+"</td>"+
+                "<td class='px-md py-sm'>"+number+"</td>"+
+                "<td class='px-md py-sm'>"+icon+" "+status+"</td></tr>");
+        }
+    });
+
+    // every 15 secs, update times
+    setInterval(function(){
+        $("#statusspylog td.date").each(function(){
+            then = new Date($(this).data('date'));
+            $(this).text(timeSince(then)+" ago");
+        });
+    }, 15000)
+}
+
+function timeSince(date) {
+
+  var seconds = Math.floor((new Date() - date) / 1000);
+
+  var interval = Math.floor(seconds / 31536000);
+
+  if (interval >= 1) {
+    return interval + " year(s)";
+  }
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) {
+    return interval + " month(s)";
+  }
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) {
+    return interval + " day(s)";
+  }
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) {
+    return interval + " hour(s)";
+  }
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) {
+    return interval + " minute(s)";
+  }
+  return Math.floor(seconds) + " seconds";
 }

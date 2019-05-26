@@ -7,9 +7,10 @@ html(lang='en')
     link(href='https://fonts.googleapis.com/css?family=Roboto:100,400,700' rel='stylesheet')
     link(href='//unpkg.com/ress/dist/ress.min.css' rel='stylesheet' type='text/css')
     link(href='//unpkg.com/euphoria/dist/euphoria.min.css' rel='stylesheet' type='text/css')
-    link(href='https://use.fontawesome.com/releases/v5.0.13/css/all.css' rel='stylesheet' integrity='sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp' crossorigin='anonymous')
+    link(href='https://use.fontawesome.com/releases/v5.8.2/css/all.css' rel='stylesheet' integrity='sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay' crossorigin='anonymous')
     link(href='/styles.css' rel='stylesheet')
     script(src='http://code.jquery.com/jquery-latest.min.js')
+    script(src="/socket.io/socket.io.js")
     script(src='/client.js')
 
   body.p-none.m-none.ff-sans-serif
@@ -20,6 +21,19 @@ html(lang='en')
         a.button.ml-md(href='/') Scan
         a.button.ml-md(href='/cards') Cards
         a.button.ml-md(href='/logs') Logs
+        a.button.ml-md#statusspybutton
+          i.fas.fa-binoculars
 
     section.mx-auto.my-md.p-md
       block content
+
+    div#statusspyview.dn
+      h1.page-heading Monitoring...
+      table#statusspylog.w-100
+        thead
+          tr
+            th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Time
+            th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Name
+            th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Card
+            th.px-md.py-sm.bb.bc-gray-lighter.gray-light.fw-1 Status
+        tbody

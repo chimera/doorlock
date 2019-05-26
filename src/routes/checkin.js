@@ -13,8 +13,9 @@ module.exports = (req, res) => {
   Cards.validate(rfid).then(card => {
     console.log('CARD:', card)
     if (!card) {
-      logger.logInvalidCard({number: rfid})
-      return response(req,res,'/failure',false,"Card was not recognized as valid.")
+      card = {number: rfid}
+      logger.logInvalidCard(card)
+      return response(req,res,'/failure',false,"Card was not recognized as valid.",200,card)
     }
 
     logger.logValidCard(card)
@@ -28,11 +29,11 @@ module.exports = (req, res) => {
         remaining = time_passes.unused_count;
         data = {"name": checkin.name, "remaining": remaining, "checkin":checkin, "time_passes": time_passes}
         console.log(data)
-        response(req,res,`/success?name=${checkin.name}`,true,data)
+        response(req,res,`/success?name=${checkin.name}`,true,data,200,card)
       })
       .catch(err => {
         logger.logError({number: rfid}, err)
-        response(req,res,null,false,err.toString(),500)
+        response(req,res,null,false,err.toString(),500,card)
       })
 
       logger.logGrantedCard(card)
@@ -46,16 +47,17 @@ module.exports = (req, res) => {
     })
     .catch(err => {
       logger.logError(card, err)
-      response(req,res,null,false,err.toString(),500)
+      response(req,res,null,false,err.toString(),500,card)
     })
   }).catch(err => {
-    logger.logError({number: rfid}, err)
-    response(req,res,null,false,err.toString(),500)
+    card = {number: rfid}
+    logger.logError(card, err)
+    response(req,res,null,false,err.toString(),500,card)
   })
 }
 
-function response(req,res,path,success,data,status) {
-  console.log("sending response", path,success,data,status)
+function response(req,res,path,success,data,status,card){
+  console.log("sending response:", path,success,data,status)
   if(status==500){
     res.status(status).send(data).end()
   } else {
@@ -65,5 +67,5 @@ function response(req,res,path,success,data,status) {
       res.redirect(path).end()
     }
   }
-  io.emit('checkin', { for: 'everyone', data, success })
+  io.emit('checkin', { for: 'everyone', data, card, success })
 }

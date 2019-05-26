@@ -89,9 +89,8 @@ http.listen(PORT, function(){
 //---------------------------------------------------------
 
 io.on('connection', function(socket){
-  io.emit('checkin', { for: 'everyone' })
-  // io.emit('checkin', 'hi')
-  console.log('WS user connected');
+  io.emit('checkin', { for: 'everyone', data: 'Hi '+socket.conn.remoteAddress })
+  console.log('socket.io user connected:', 'Hi '+socket.conn.remoteAddress);
 })
 
 
