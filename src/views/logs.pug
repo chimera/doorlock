@@ -26,4 +26,4 @@ block content
           td.px-md.py-sm.bb.bc-gray-lighter= log.level
           td.px-md.py-sm.bb.bc-gray-lighter= log.message
           td.px-md.py-sm.bb.bc-gray-lighter= log.card ? log.card.name : ""
-          td.px-md.py-sm.bb.bc-gray-lighter= log.card ? log.card.number : ""
+          td.px-md.py-sm.bb.bc-gray-lighter= log.card ? "****"+parseInt(log.card.number, 10).toString().slice(-3) : ""
