@@ -21,37 +21,36 @@ module.exports = (req, res) => {
 
     Cobot.doCheckin(card)
       .then(checkin => {
-        time_passes = Cobot.doCheckTimepasses(card)
-        if (time_passes) {
-          if (time_passes.unused_count > 0) {
-            // TODO: handle admins who don't use time passes
+        Cobot.doCheckTimepasses(card)
+          .then(time_passes => {
             // if we got here, 0 time passes is not a problem
             // because of an unlimited plan. therefore, output
             // nothing for the count. ("you have passes remaining")
             if (time_passes.unused_count === 0) {
-              remaining = undefined; //TODO: this will never happen because of above
+              remaining = undefined;
             } else {
               remaining = time_passes.unused_count;
             }
             data = {"name": checkin.name, "remaining": remaining, "checkin":checkin, "time_passes": time_passes}
             console.log(data)
             response(req,res,`/success?name=${checkin.name}`,true,data)
-
-            Door.open().catch(err => {
-              logger.logError({number: rfid}, err)
-              Door.close().catch(err => {
-                logger.logError({number: rfid}, err)
-              })
-            })
-          }
-        } else {
-            logger.logError({number: rfid}, "No time passes found.")
-            response(req,res,null,false,""+"No time passes found.",500)
-        }
+          })
+          .catch(err => {
+            logger.logError({number: rfid}, err)
+            response(req,res,null,false,""+err,500)
+          })
       })
       .catch(err => {
         logger.logError({number: rfid}, err)
         response(req,res,null,false,""+err,500)
+      })
+      .finally( () => {
+        Door.open().catch(err => {
+          logger.logError({number: rfid}, err)
+          Door.close().catch(err => {
+            logger.logError({number: rfid}, err)
+          })
+        })
       })
   }).catch(err => {
     logger.logError({number: rfid}, err)
