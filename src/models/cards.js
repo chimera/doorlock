@@ -6,7 +6,13 @@ const CARDS_PATH = path.join(process.cwd(), 'cards.json')
 module.exports = class Cards {
   static all() {
     return new Promise((resolve, reject) => {
-      var cards = fs.readFileSync(CARDS_PATH, "utf8")
+      try {
+        var cards = fs.readFileSync(CARDS_PATH, "utf8")
+      } catch (e) {
+        // create file if doesn't exist
+        fs.writeFileSync(CARDS_PATH, null)
+        var cards = "[]"
+      }
       var out = JSON.parse(cards)
       resolve(out)
     })

@@ -6,6 +6,10 @@ block title
 
 block content
   h1.page-heading Logs
+  script(src="/socket.io/socket.io.js")
+  script
+    | var socket = io();
+    | socket.on('checkin', function(msg){ console.log(msg); });
   table.collapse.w-100
     thead
       tr

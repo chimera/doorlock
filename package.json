@@ -21,6 +21,7 @@
     "node-hid": "0.7.3",
     "pug": "2.0.3",
     "serialport": "6.2.0",
+    "socket.io": "^2.2.0",
     "winston": "^3.0.0"
   },
   "devDependencies": {

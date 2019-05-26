@@ -1,5 +1,6 @@
 const axios = require('axios')
 const Cards = require('./cards')
+const CachedTimePasses = require('./cached_time_passes')
 const https = require('https')
 const {
   CARD_UPDATE_INTERVAL,
@@ -43,7 +44,7 @@ module.exports = class Cobot {
       })
   }
 
-  checktimepasses(membership_id) {
+  gettimepasses() {
     if (!COBOT_CARDS_API) throw new Error('missing "COBOT_CARDS_API" env variable!')
 
     const config = {
@@ -56,12 +57,10 @@ module.exports = class Cobot {
     }
 
     return axios
-      .get(`https://chimera.cobot.me/api/memberships/${membership_id}/time_passes/unused`, config)
+      .get(`https://chimera.cobot.me/api/time_passes/unused`, config)
       .then(resp => {
         console.log('RESPONSE:', resp.data)
-        return {
-          unused_count: resp.data.length
-        }
+        return resp.data
       })
       .catch(err => {
         console.error(err.response.data)
@@ -142,7 +141,21 @@ module.exports = class Cobot {
 
   static doCheckTimepasses(card) {
     console.log('Checking time passes for ', card)
-    return (new Cobot(COBOT_ACCESS_TOKEN)).checktimepasses(card.membership_id)
+    if (CachedTimePasses.isCacheValid()) {
+      console.log('Using cached time passes')
+      return {
+        unused_count: CachedTimePasses.get(card.membership_id).length
+      }
+    } else {
+      console.log('Cache expired, getting new time passes')
+      passes = (new Cobot(COBOT_ACCESS_TOKEN)).gettimepasses()
+      CachedTimePasses.write(passes) // cache locally
+    }
+    // no matter what we use the same logic to check timepass validity
+    // TODO: check date/time of timepass validity as well
+    return {
+      unused_count: CachedTimePasses.get(card.membership_id).length
+    }
   }
 
   static getCards() {

@@ -4,6 +4,9 @@ const helmet = require('helmet')
 const moment = require('moment')
 const path = require('path')
 const app = express()
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+app.set('socketio', io)
 
 // const timeout = require('connect-timeout')
 // function haltOnTimedout (req, res, next) {
@@ -55,7 +58,7 @@ try {
     console.log('Booting up. Locking door just in case.')
     board.allOff()
 } catch (err) {
-    console.log("Warning: "+err.message);
+    console.log("Warning: "+err.message)
 }
 
 //---------------------------------------------------------
@@ -71,4 +74,28 @@ app.get('/update', require('./routes/update'))
 app.get('/update_nexudus', require('./routes/update_nexudus'))
 app.get('/', (req, res) => res.render('home', {}))
 
-app.listen(PORT, () => console.log('Doorlock app listening at http://localhost:3000 !'))
+
+//---------------------------------------------------------
+// HTTP
+//---------------------------------------------------------
+
+
+http.listen(PORT, function(){
+  console.log('Doorlock app listening at http://localhost:'+PORT+' !')
+})
+
+//---------------------------------------------------------
+// Websocket
+//---------------------------------------------------------
+
+io.on('connection', function(socket){
+  io.emit('checkin', { for: 'everyone' })
+  // io.emit('checkin', 'hi')
+  console.log('WS user connected');
+})
+
+
+// io.on('connection', client => {
+//   client.on('event', data => { 1234 })
+//   // client.on('disconnect', () => { /* … */ })
+// })
