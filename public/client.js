@@ -9,6 +9,11 @@ $(function(){
         window.relayActivated = false;
     }, 20000);
 
+    // hide status spy button on localhost
+    if (window.location.toString().indexOf(("localhost")) >= 0) {
+        $("#statusspybutton").hide();
+    }
+
     $("#statusspybutton").click(function(event){
         // toggle
         window.statusspy = !window.statusspy;

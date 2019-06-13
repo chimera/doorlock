@@ -7,9 +7,9 @@ block content
 
   h1.page-heading Scan Your Card
   form(action='/checkin' method='post')
-    input#rfid.input.input-block(name="rfid" autofocus)
+    input#rfid.input.txt-xl.input-block(name="rfid" autofocus)
 
-  section#failure.dn
+  section#failure.dn.txt-xl
     .df.ai-center.jc-center.bg-danger.white.px-lg.py-md
       i.fas.fa-times.mr-lg
       .f-1
@@ -20,7 +20,7 @@ block content
           br
           em Maybe your membership has expired?
 
-  section#success.dn
+  section#success.dn.txt-xl
     .df.ai-center.jc-center.bg-success.white.px-lg.py-md
       i.fas.fa-check.mr-lg
       .f-1
@@ -34,7 +34,7 @@ block content
           span#remaining
           |  checkins remaining.
 
-  section#error.dn
+  section#error.dn.txt-xl
     .df.ai-center.jc-center.bg-warning.white.px-lg.py-md
       i.fas.fa-exclamation.mr-lg
       .f-1
@@ -43,6 +43,6 @@ block content
         .mt-sm.warning-lighter
           em We're sorry. Please contact a volunteer.
 
-  section#loading.dn
+  section#loading.dn.txt-xxl
     .df.ai-center.jc-center.px-lg.py-md
       i.fas.fa-spinner.fa-spin.mr-lg
