@@ -38,7 +38,7 @@ module.exports = class Cobot {
         }
       })
       .catch(err => {
-        console.error(err.response.data)
+        console.error("CRITICAL at work_sessions", err.response.data)
         throw new Error(err.response.data.base)
       })
   }
@@ -64,7 +64,7 @@ module.exports = class Cobot {
         }
       })
       .catch(err => {
-        console.error(err.response.data)
+        console.error("CRITICAL at time_passes", err.response.data)
         throw new Error(err.response.data.base)
       })
   }
@@ -74,23 +74,24 @@ module.exports = class Cobot {
       throw new Error('missing "COBOT_CARDS_API" env variable!')
     return new Promise((resolve, reject) => {
       // TODO move to axios
-      const req = https.request(
-        {
+      var options = {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
           hostname: 'chimera.cobot.me',
           method: 'GET',
-          path: '/api/check_in_tokens',
-          secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
-          ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
-          honorCipherOrder: true
-        },
+          path: '/api/check_in_tokens' //,
+          //secureOptions: require('constants').SSL_OP_NO_TLSv1_2,
+          //ciphers: 'ECDHE-RSA-AES256-SHA:AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+          //honorCipherOrder: true
+      };
+      console.log("Connecting to",options);
+      const req = https.request(
+        options,
         res => {
           const { statusCode, headers } = res
-          console.log('\n----------------------------------------------------')
-          console.log('COBOT CARDS RESPONSE:')
-          console.log(JSON.stringify({ statusCode, headers }, null, 2))
+          //console.log('\n----------------------------------------------------')
+          //console.log(JSON.stringify({ statusCode, headers }, null, 2))
           res.setEncoding('utf8')
 
           let cards = ''
@@ -99,8 +100,10 @@ module.exports = class Cobot {
           })
 
           res.on('end', () => {
+            console.log('COBOT RESPONSE LENGTH',cards.length)
             cards = JSON.parse(cards)
-            console.log(JSON.stringify(cards, null, 2))
+            console.log('COBOT CARDS COUNT',cards.length)
+            //console.log(JSON.stringify(cards, null, 2))
             if (!cards || !cards.length) {
               throw new Error('No cards received from API!')
             }
@@ -111,9 +114,9 @@ module.exports = class Cobot {
                 number: card.token,
               }))
             )
-            console.log(
-              '----------------------------------------------------\n'
-            )
+            //console.log(
+            //  '----------------------------------------------------\n'
+            //)
           })
         }
       )
@@ -125,9 +128,10 @@ module.exports = class Cobot {
           });
       });
 
-      req.on('data', console.log)
+      //req.on('data', console.log)
       req.on('error', e => {
-        console.error(e)
+        var d = new Date();
+        console.error(d.toUTCString(),"CRITICAL at check_in_tokens", e)
         reject(e)
       })
       req.end()
