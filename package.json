@@ -17,7 +17,7 @@
     "easy-usb-relay": "danawoodman/easy-usb-relay",
     "express": "4.16.3",
     "helmet": "3.12.1",
-    "moment": "2.22.2",
+    "moment": "2.29.2",
     "node-hid": "0.7.3",
     "pug": "2.0.3",
     "serialport": "6.2.0",
